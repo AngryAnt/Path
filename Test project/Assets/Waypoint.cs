@@ -7,7 +7,6 @@ public class Waypoint : MonoBehaviour
 {
 	private List<Connection> m_Connections = new List<Connection> ();
 	private float m_Radius = 1;
-	private string m_Tag = "Untagged";
 	
 	
 	void OnEnable ()
@@ -110,11 +109,11 @@ public class Waypoint : MonoBehaviour
 	{
 		get
 		{
-			return m_Tag;
+			return gameObject.tag;
 		}
 		set
 		{
-			m_Tag = value;
+			gameObject.tag = value;
 		}
 	}
 	
