@@ -9,6 +9,8 @@ public class Navigation : MonoBehaviour
 	private static Navigation s_Instance;
 	
 	private List<Waypoint> m_Waypoints = new List<Waypoint> ();
+	[SerializeField]
+	private int m_SeekerIterationCap = 10;
 	
 	
 	public static Navigation Instance
@@ -60,6 +62,19 @@ public class Navigation : MonoBehaviour
 		if (s_Instance == this)
 		{
 			s_Instance = null;
+		}
+	}
+	
+	
+	public static int SeekerIterationCap
+	{
+		get
+		{
+			return Instance.m_SeekerIterationCap;
+		}
+		set
+		{
+			Instance.m_SeekerIterationCap = value;
 		}
 	}
 	

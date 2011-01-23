@@ -14,6 +14,8 @@ public class NavigationInspector : Editor
 	
 	public override void OnInspectorGUI ()
 	{
+		Navigation.SeekerIterationCap = EditorGUILayout.IntField ("Seeker iterations", Navigation.SeekerIterationCap);
+		
 		GUILayout.Label ("Waypoints", EditorStyles.toolbar, GUILayout.ExpandWidth (true));
 		
 		m_Scroll = GUILayout.BeginScrollView (m_Scroll, GUILayout.Height (kWaypointListHeight));

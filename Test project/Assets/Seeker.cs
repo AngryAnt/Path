@@ -6,7 +6,7 @@ public class Seeker
 {
 	private Navigator m_Owner;
 	private Vector3 m_StartPosition, m_EndPosition;
-	private int m_IterationCap = 10;
+	private int m_IterationCap;
 	private double m_StartTime;
 	
 	
@@ -15,6 +15,7 @@ public class Seeker
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
 		m_Owner = owner;
+		m_IterationCap = Navigation.SeekerIterationCap;
 	}
 	
 	
