@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 [ExecuteInEditMode]
 public class Waypoint : MonoBehaviour
 {
-	private List<Connection> m_Connections = new List<Connection> ();
-	private float m_Radius = 1;
+	[SerializeField]
+	public List<Connection> m_Connections = new List<Connection> ();
+	[SerializeField]
+	public float m_Radius = 1;
 	
 	
 	void OnEnable ()
@@ -70,11 +73,11 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
-	public Connection[] Connections
+	public ReadOnlyCollection<Connection> Connections
 	{
 		get
 		{
-			return m_Connections.ToArray ();
+			return m_Connections.AsReadOnly ();
 		}
 	}
 	

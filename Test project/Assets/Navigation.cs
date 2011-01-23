@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 [ExecuteInEditMode]
 public class Navigation : MonoBehaviour
@@ -63,11 +64,11 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	public static Waypoint[] Waypoints
+	public static ReadOnlyCollection<Waypoint> Waypoints
 	{
 		get
 		{
-			return Instance.m_Waypoints.ToArray ();
+			return Instance.m_Waypoints.AsReadOnly ();
 		}
 	}
 

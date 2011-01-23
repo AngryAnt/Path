@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 [CustomEditor (typeof (Waypoint))]
 public class WaypointInspector : Editor
@@ -20,15 +21,8 @@ public class WaypointInspector : Editor
 	{
 		m_Waypoints = new List<Waypoint> (Navigation.Waypoints);
 		m_Waypoints.Remove (target as Waypoint);
-		m_WaypointNames = m_Waypoints.ConvertAll (new System.Converter<Waypoint, string> (WaypointToString)).ToArray ();
-		
-		m_ConnectionNames = System.Array.ConvertAll (((Waypoint)target).Connections, new System.Converter<Connection, string> (ConnectionToString));
-	}
-	
-	
-	string WaypointToString (Waypoint waypoint)
-	{
-		return waypoint.ToString ();
+		m_WaypointNames = m_Waypoints.Select (waypoint => waypoint.ToString ()).ToArray ();
+		m_ConnectionNames = ((Waypoint)target).Connections.Select (connection => connection.ToString ()).ToArray ();
 	}
 	
 	

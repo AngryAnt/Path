@@ -1,8 +1,13 @@
+using UnityEngine;
+
 [System.Serializable]
 public class Connection
 {
+	[SerializeField]
 	private Waypoint m_From, m_To;
+	[SerializeField]
 	private float m_Width = 1.0f;
+	[SerializeField]
 	private string m_Tag = "Untagged";
 	
 	
@@ -60,6 +65,15 @@ public class Connection
 		set
 		{
 			m_Tag = value;
+		}
+	}
+	
+	
+	public float Cost
+	{
+		get
+		{
+			return (To.Position - From.Position).sqrMagnitude;
 		}
 	}
 	
