@@ -34,11 +34,11 @@ public class Navigator : MonoBehaviour
 		if (endPosition == m_TargetPosition)
 		{
 			m_PathfoundTargetPosition = m_TargetPosition;
-			SendMessage ("OnTargetUnreachable");
+			SendMessage ("OnTargetUnreachable", SendMessageOptions.DontRequireReceiver);
 			return;
 		}
 		
-		SendMessage ("OnPathUnavailable");
+		SendMessage ("OnPathUnavailable", SendMessageOptions.DontRequireReceiver);
 	}
 	
 	
@@ -47,10 +47,10 @@ public class Navigator : MonoBehaviour
 		if (endPosition == m_TargetPosition)
 		{
 			m_PathfoundTargetPosition = m_TargetPosition;
-			SendMessage ("OnNewPath", result);
+			SendMessage ("OnNewPath", result, SendMessageOptions.DontRequireReceiver);
 			return;
 		}
 		
-		SendMessage ("OnPathAvailable", result);
+		SendMessage ("OnPathAvailable", result, SendMessageOptions.DontRequireReceiver);
 	}
 }
