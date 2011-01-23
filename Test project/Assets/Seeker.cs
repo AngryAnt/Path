@@ -7,6 +7,7 @@ public class Seeker
 	private Navigator m_Owner;
 	private Vector3 m_StartPosition, m_EndPosition;
 	private int m_IterationCap = 10;
+	private double m_StartTime;
 	
 	
 	public Seeker (Vector3 startPosition, Vector3 endPosition, Navigator owner)
@@ -20,6 +21,8 @@ public class Seeker
 	public IEnumerator Seek ()
 	{
 		Waypoint startNode = null, endNode = null;
+		
+		m_StartTime = Time.realtimeSinceStartup;
 		
 		foreach (Waypoint waypoint in Navigation.Waypoints)
 		{
@@ -96,6 +99,7 @@ public class Seeker
 	
 	private void OnPathResult (Path path)
 	{
+		path.SeekTime = (float)(Time.realtimeSinceStartup - m_StartTime);
 		m_Owner.OnPathResult (m_EndPosition, path);
 	}
 	

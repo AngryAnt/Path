@@ -7,6 +7,7 @@ public class Path
 {
 	private Vector3 m_StartPosition, m_EndPosition;
 	private List<Waypoint> m_Nodes = new List<Waypoint> ();
+	private float m_SeekTime;
 	
 	
 	public Path (Vector3 startPosition, Vector3 endPosition)
@@ -52,6 +53,19 @@ public class Path
 		get
 		{
 			return m_EndPosition;
+		}
+	}
+	
+	
+	public float SeekTime
+	{
+		get
+		{
+			return m_SeekTime;
+		}
+		set
+		{
+			m_SeekTime = value;
 		}
 	}
 	
