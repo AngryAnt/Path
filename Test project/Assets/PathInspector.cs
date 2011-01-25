@@ -12,6 +12,7 @@ public class PathInspector : Editor
 	private static int s_WaypointDropDownIndex = 0;
 	private static float s_AutoConnectMaxWidth = 10;
 	private static int s_AutoConnectBlockingLayer;
+	private static bool s_ShowConnectionWidth = true;
 	// Waypoint specific
 	private static string[] s_ConnectionNames = new string[0];
 	private static int s_ConnectionDropDownIndex = 0, s_ConnectionFormingWaypointIndex = 0;
@@ -79,6 +80,15 @@ public class PathInspector : Editor
 	}
 	
 	
+	public static bool ShowConnectionWidth
+	{
+		get
+		{
+			return s_ShowConnectionWidth;
+		}
+	}
+	
+	
 	public override void OnInspectorGUI ()
 	{
 		OnNavigationGUI (target);
@@ -101,6 +111,8 @@ public class PathInspector : Editor
 	{
 		GUILayout.Label ("Navigation", EditorStyles.boldLabel);
 		
+		s_ShowConnectionWidth = EditorGUILayout.Toggle ("Connection width", s_ShowConnectionWidth);
+		
 		Navigation.SeekerIterationCap = EditorGUILayout.IntField ("Seeker iterations", Navigation.SeekerIterationCap);
 		
 		EditorGUILayout.Space ();
@@ -112,11 +124,18 @@ public class PathInspector : Editor
 		
 		GUILayout.BeginHorizontal ();
 			GUILayout.Space (103);
-			if (GUILayout.Button ("Autoconnect", EditorStyles.miniButton))
-			{
-				Autoconnect (1 << s_AutoConnectBlockingLayer, s_AutoConnectMaxWidth);
-				UpdateLists (target);
-			}
+			GUILayout.BeginVertical ();
+				if (GUILayout.Button ("Auto connect", EditorStyles.miniButton))
+				{
+					AutoConnect (1 << s_AutoConnectBlockingLayer, s_AutoConnectMaxWidth);
+					UpdateLists (target);
+				}
+				if (GUILayout.Button ("Auto scale", EditorStyles.miniButton))
+				{
+					AutoScale (1 << s_AutoConnectBlockingLayer, s_AutoConnectMaxWidth);
+					EditorUtility.SetDirty (Navigation.Instance);
+				}
+			GUILayout.EndVertical ();
 		GUILayout.EndHorizontal ();
 		
 		EditorGUILayout.Space ();
@@ -126,6 +145,7 @@ public class PathInspector : Editor
 			foreach (Waypoint waypoint in s_Waypoints)
 			{
 				waypoint.Disconnect ();
+				EditorUtility.SetDirty (waypoint);
 			}
 			UpdateLists (target);
 		}
@@ -212,6 +232,7 @@ public class PathInspector : Editor
 		if (GUILayout.Button ("Disconnect", EditorStyles.miniButton))
 		{
 			waypoint.Disconnect ();
+			EditorUtility.SetDirty (waypoint);
 			UpdateLists (waypoint);
 		}
 
@@ -244,7 +265,7 @@ public class PathInspector : Editor
 	}
 	
 	
-	public static void Autoconnect (LayerMask layerMask, float maxWidth)
+	public static void AutoConnect (LayerMask layerMask, float maxWidth)
 	{
 		foreach (Waypoint one in s_Waypoints)
 		{
@@ -259,7 +280,8 @@ public class PathInspector : Editor
 
 				while (radius > kMinConnectionWidth)
 				{
-					if (CanConnect (one, other, radius, layerMask))
+					RaycastHit hit;
+					if (!Physics.SphereCast (one.Position, radius, other.Position - one.Position, out hit, (other.Position - one.Position).magnitude, layerMask))
 					{
 						new Connection (one, other).Width = radius;
 						EditorUtility.SetDirty (one);
@@ -271,17 +293,25 @@ public class PathInspector : Editor
 			}
 		}
 	}
-
 	
 	
-	public static bool CanConnect (Waypoint from, Waypoint to, float width, LayerMask layerMask)
+	public static void AutoScale (LayerMask layerMask, float maxWidth)
 	{
-		RaycastHit hit;
-		if (Physics.SphereCast (from.Position, width, to.Position - from.Position, out hit, (to.Position - from.Position).magnitude, layerMask))
+		foreach (Waypoint waypoint in s_Waypoints)
 		{
-			return false;
+			float radius = maxWidth;
+
+			while (radius > kMinConnectionWidth)
+			{
+				if (!Physics.CheckSphere (waypoint.Position, radius, layerMask))
+				{
+					waypoint.Radius = radius;
+					EditorUtility.SetDirty (waypoint);
+					break;
+				}
+				
+				radius -= kAutoConnectSearchStep;
+			}
 		}
-		
-		return true;
 	}
 }
