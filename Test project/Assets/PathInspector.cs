@@ -54,6 +54,28 @@ public class PathInspector : Editor
 			
 			s_WaypointDropDownIndex = s_Waypoints.IndexOf (targetWaypoint) + 2;
 		}
+		else
+		{
+			s_WaypointDropDownIndex = 0;
+		}
+	}
+	
+	
+	public static Waypoint SelectedWaypoint
+	{
+		get
+		{
+			return s_Waypoints.Count > 0 && s_WaypointDropDownIndex > 1 ? s_Waypoints[s_WaypointDropDownIndex - 2] : null;
+		}
+	}
+	
+	
+	public static Connection SelectedConnection
+	{
+		get
+		{
+			return SelectedWaypoint != null && SelectedWaypoint.Connections.Count > 0 ? SelectedWaypoint.Connections[s_ConnectionDropDownIndex] : null;
+		}
 	}
 	
 	
@@ -217,6 +239,7 @@ public class PathInspector : Editor
 	public static void SelectWaypoint (Waypoint waypoint)
 	{
 		Selection.activeObject = waypoint.gameObject;
+		s_ConnectionDropDownIndex = 0;
 		UpdateLists (waypoint);
 	}
 	

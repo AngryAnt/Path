@@ -118,5 +118,10 @@ public class Navigation : MonoBehaviour
 		{
 			waypoint.RenderGizmos ();
 		}
+		
+		if (PathInspector.SelectedWaypoint != null)
+		{
+			PathInspector.SelectedWaypoint.RenderGizmos ();
+		}
 	}
 }
