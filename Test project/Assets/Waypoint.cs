@@ -73,6 +73,12 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	public void Disconnect ()
+	{
+		m_Connections = new List<Connection> ();
+	}
+	
+	
 	public ReadOnlyCollection<Connection> Connections
 	{
 		get
