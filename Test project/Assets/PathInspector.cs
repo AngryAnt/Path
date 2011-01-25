@@ -58,6 +58,7 @@ public class PathInspector : Editor
 		else
 		{
 			s_WaypointDropDownIndex = 0;
+			s_ConnectionDropDownIndex = 0;
 		}
 	}
 	
@@ -281,9 +282,18 @@ public class PathInspector : Editor
 				while (radius > kMinConnectionWidth)
 				{
 					RaycastHit hit;
-					if (!Physics.SphereCast (one.Position, radius, other.Position - one.Position, out hit, (other.Position - one.Position).magnitude, layerMask))
+					if (!Physics.CheckSphere (one.Position, radius, layerMask) && 
+						!Physics.SphereCast (
+							one.Position,
+							radius,
+							other.Position - one.Position,
+							out hit,
+							(other.Position - one.Position).magnitude,
+							layerMask
+						)
+					)
 					{
-						new Connection (one, other).Width = radius;
+						new Connection (one, other).Width = radius * 2.0f;
 						EditorUtility.SetDirty (one);
 						break;
 					}
