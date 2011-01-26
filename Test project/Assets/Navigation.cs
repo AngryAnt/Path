@@ -114,6 +114,11 @@ public class Navigation : MonoBehaviour
 	
 	public void OnDrawGizmos ()
 	{
+		if (!PathInspector.ShowGizmos)
+		{
+			return;
+		}
+		
 		foreach (Waypoint waypoint in Instance.m_Waypoints)
 		{
 			waypoint.RenderGizmos ();

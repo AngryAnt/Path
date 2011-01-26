@@ -5,7 +5,7 @@ public class Navigator : MonoBehaviour
 {
 	private Vector3 m_PathfoundTargetPosition;
 	
-	public Vector3 m_TargetPosition;
+	public Vector3 targetPosition;
 	
 	
 	void Awake ()
@@ -16,9 +16,9 @@ public class Navigator : MonoBehaviour
 	
 	void Update ()
 	{
-		if (m_TargetPosition != m_PathfoundTargetPosition)
+		if (targetPosition != m_PathfoundTargetPosition)
 		{
-			StartCoroutine (new Seeker (transform.position, m_TargetPosition, this).Seek ());
+			StartCoroutine (new Seeker (transform.position, targetPosition, this).Seek ());
 		}
 	}
 	
@@ -31,9 +31,9 @@ public class Navigator : MonoBehaviour
 	
 	public void OnPathFailed (Vector3 endPosition)
 	{
-		if (endPosition == m_TargetPosition)
+		if (endPosition == targetPosition)
 		{
-			m_PathfoundTargetPosition = m_TargetPosition;
+			m_PathfoundTargetPosition = targetPosition;
 			SendMessage ("OnTargetUnreachable", SendMessageOptions.DontRequireReceiver);
 			return;
 		}
@@ -44,9 +44,9 @@ public class Navigator : MonoBehaviour
 	
 	public void OnPathResult (Vector3 endPosition, Path result)
 	{
-		if (endPosition == m_TargetPosition)
+		if (endPosition == targetPosition)
 		{
-			m_PathfoundTargetPosition = m_TargetPosition;
+			m_PathfoundTargetPosition = targetPosition;
 			SendMessage ("OnNewPath", result, SendMessageOptions.DontRequireReceiver);
 			return;
 		}

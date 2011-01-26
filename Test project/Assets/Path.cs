@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 public class Path
 {
 	private Vector3 m_StartPosition, m_EndPosition;
-	private List<Waypoint> m_Nodes = new List<Waypoint> ();
+	private List<Connection> m_Segments = new List<Connection> ();
 	private float m_SeekTime;
 	
 	
@@ -21,21 +21,7 @@ public class Path
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
-		
-		m_Nodes.Add (data.Path[0].From);
-		foreach (Connection connection in data.Path)
-		{
-			m_Nodes.Add (connection.To);
-		}
-	}
-	
-	
-	public ReadOnlyCollection<Waypoint> Nodes
-	{
-		get
-		{
-			return m_Nodes.AsReadOnly ();
-		}
+		m_Segments = new List<Connection> (data.Path);
 	}
 	
 	
@@ -57,6 +43,33 @@ public class Path
 	}
 	
 	
+	public Waypoint StartNode
+	{
+		get
+		{
+			return m_Segments[0].From;
+		}
+	}
+	
+	
+	public Waypoint EndNode
+	{
+		get
+		{
+			return m_Segments[m_Segments.Count - 1].To;
+		}
+	}
+	
+	
+	public ReadOnlyCollection<Connection> Segments
+	{
+		get
+		{
+			return m_Segments.AsReadOnly ();
+		}
+	}
+	
+	
 	public float SeekTime
 	{
 		get
@@ -72,6 +85,13 @@ public class Path
 	
 	public void ArrivedAt (Waypoint waypoint)
 	{
-		m_Nodes.Remove (waypoint);
+		for (int i = 0; i < m_Segments.Count; i++)
+		{
+			if (m_Segments[i].To == waypoint)
+			{
+				m_Segments.RemoveRange (0, i + 1);
+				return;
+			}
+		}
 	}
 }

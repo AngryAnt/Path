@@ -13,6 +13,7 @@ public class PathInspector : Editor
 	
 	private static bool s_ShowWaypointFoldout = true;
 	private static bool s_ShowConnectionFoldout = true;
+	private static bool s_ShowGizmos = true;
 	private static bool s_ShowConnectionWidth = true;
 	
 	private static float s_AutoConnectMaxWidth = 10;
@@ -88,6 +89,15 @@ public class PathInspector : Editor
 	}
 	
 	
+	public static bool ShowGizmos
+	{
+		get
+		{
+			return s_ShowGizmos;
+		}
+	}
+	
+	
 	public static bool ShowConnectionWidth
 	{
 		get
@@ -131,6 +141,7 @@ public class PathInspector : Editor
 	
 	public static void OnNavigationGUI (Object target)
 	{
+		s_ShowGizmos = EditorGUILayout.Toggle ("Gizmos", s_ShowGizmos);
 		s_ShowConnectionWidth = EditorGUILayout.Toggle ("Connection width", s_ShowConnectionWidth);
 		
 		Navigation.SeekerIterationCap = EditorGUILayout.IntField ("Seeker iterations", Navigation.SeekerIterationCap);
