@@ -10,16 +10,23 @@ public class PathInspector : Editor
 	private static List<Waypoint> s_Waypoints = new List<Waypoint> ();
 	private static string[] s_WaypointNames = new string[0], s_WaypointSelectionNames = new string[0];
 	private static int s_WaypointDropDownIndex = 0;
-	private static float s_AutoConnectMaxWidth = 10;
-	private static int s_AutoConnectBlockingLayer;
+	
+	private static bool s_ShowWaypointFoldout = true;
+	private static bool s_ShowConnectionFoldout = true;
 	private static bool s_ShowConnectionWidth = true;
+	
+	private static float s_AutoConnectMaxWidth = 10;
+	private static float s_MinConnectionWidth = 1.0f;
+	private static float s_AutoConnectSearchStep = 0.1f;
+	private static int s_AutoConnectBlockingLayer;
+	
+	private static GUIStyle s_BoldFoldoutStyle;
+	
 	// Waypoint specific
 	private static string[] s_ConnectionNames = new string[0];
 	private static int s_ConnectionDropDownIndex = 0, s_ConnectionFormingWaypointIndex = 0;
 	
 	const float kPlusMinusWidth = 25.0f, kDropDownRightButtonOverlap = -6;
-	
-	const float kMinConnectionWidth = 1.0f, kAutoConnectSearchStep = 0.1f;
 	
 	
 	public void OnEnable ()
@@ -90,28 +97,40 @@ public class PathInspector : Editor
 	}
 	
 	
+	private static GUIStyle BoldFoldoutStyle
+	{
+		get
+		{
+			if (s_BoldFoldoutStyle == null)
+			{
+				s_BoldFoldoutStyle = new GUIStyle (EditorStyles.foldout);
+				s_BoldFoldoutStyle.name = "BoldFoldout";
+				s_BoldFoldoutStyle.font = EditorStyles.boldFont;
+			}
+			
+			return s_BoldFoldoutStyle;
+		}
+	}
+	
+	
 	public override void OnInspectorGUI ()
 	{
 		OnNavigationGUI (target);
 		
 		Waypoint waypoint = target as Waypoint;
-		if (waypoint != null)
+		
+		EditorGUILayout.Space ();
+		
+		GUILayout.Space (2);
+		if (waypoint != null && s_ShowWaypointFoldout)
 		{
-			EditorGUILayout.Space ();
-			GUILayout.BeginHorizontal ();
-				EditorGUILayout.Space ();
-				GUILayout.BeginVertical ();
-					OnWaypointGUI (waypoint);
-				GUILayout.EndVertical ();
-			GUILayout.EndHorizontal ();
+			OnWaypointGUI (waypoint);
 		}
 	}
 	
 	
 	public static void OnNavigationGUI (Object target)
 	{
-		GUILayout.Label ("Navigation", EditorStyles.boldLabel);
-		
 		s_ShowConnectionWidth = EditorGUILayout.Toggle ("Connection width", s_ShowConnectionWidth);
 		
 		Navigation.SeekerIterationCap = EditorGUILayout.IntField ("Seeker iterations", Navigation.SeekerIterationCap);
@@ -121,6 +140,8 @@ public class PathInspector : Editor
 		GUILayout.Label ("Autoconnect", EditorStyles.boldLabel);
 		
 		s_AutoConnectMaxWidth = EditorGUILayout.FloatField ("Max test width", s_AutoConnectMaxWidth);
+		s_MinConnectionWidth = EditorGUILayout.FloatField ("Min test width", s_MinConnectionWidth);
+		s_AutoConnectSearchStep = EditorGUILayout.FloatField ("Test step", s_AutoConnectSearchStep);
 		s_AutoConnectBlockingLayer = EditorGUILayout.LayerField ("Blocking layers", s_AutoConnectBlockingLayer);
 		
 		GUILayout.BeginHorizontal ();
@@ -153,56 +174,108 @@ public class PathInspector : Editor
 		
 		EditorGUILayout.Space ();
 		
-		GUILayout.Label ("Waypoints", EditorStyles.boldLabel);
+		GUILayout.Box ("", GUILayout.Height (1), GUILayout.ExpandWidth (true));
+		
+		s_ShowWaypointFoldout = EditorGUILayout.Foldout (s_ShowWaypointFoldout, "Waypoints", BoldFoldoutStyle);
+		
+		if (s_ShowWaypointFoldout)
+		{
+			GUILayout.BeginHorizontal ();		
+				int newWaypointIndex = EditorGUILayout.Popup (s_WaypointDropDownIndex, s_WaypointSelectionNames);
+				if (s_WaypointDropDownIndex != newWaypointIndex && newWaypointIndex > 1)
+				{
+					s_WaypointDropDownIndex = newWaypointIndex;
+					SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
+				}
 
-		GUILayout.BeginHorizontal ();		
-			int newWaypointIndex = EditorGUILayout.Popup (s_WaypointDropDownIndex, s_WaypointSelectionNames);
-			if (s_WaypointDropDownIndex != newWaypointIndex && newWaypointIndex > 1)
-			{
-				s_WaypointDropDownIndex = newWaypointIndex;
-				SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
-			}
-			
-			GUILayout.Space (kDropDownRightButtonOverlap);
+				GUILayout.Space (kDropDownRightButtonOverlap);
 
-			if (GUILayout.Button ("+", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
-			{
-				Waypoint newWaypoint = Navigation.RegisterWaypoint (CreateWaypoint ());
-				EditorUtility.SetDirty (Navigation.Instance);
-				UpdateLists (target);
-				s_WaypointDropDownIndex = s_Waypoints.IndexOf (newWaypoint) + 2;
-				SelectWaypoint (newWaypoint);
-			}
+				GUI.enabled = s_WaypointDropDownIndex - 1 > 1;
+				if (GUILayout.Button ("<", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
+				{
+					s_WaypointDropDownIndex--;
+					SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
+				}
+				GUI.enabled = s_WaypointDropDownIndex + 1 < s_WaypointSelectionNames.Length;
+				if (GUILayout.Button (">", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
+				{
+					s_WaypointDropDownIndex++;
+					SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
+				}
+				GUI.enabled = true;
 
-			GUI.enabled = s_WaypointDropDownIndex > 1;
-			if (GUILayout.Button ("-", EditorStyles.miniButtonRight, GUILayout.Width (kPlusMinusWidth)))
-			{
-				Selection.activeObject = Navigation.Instance.gameObject;
-				Navigation.UnregisterWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
-				DestroyImmediate (s_Waypoints[s_WaypointDropDownIndex - 2].gameObject);
-				s_WaypointDropDownIndex = 0;
-				EditorUtility.SetDirty (Navigation.Instance);
-			}
-			GUI.enabled = true;
-		GUILayout.EndHorizontal ();
+				if (GUILayout.Button ("+", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
+				{
+					Waypoint newWaypoint = Navigation.RegisterWaypoint (CreateWaypoint ());
+					EditorUtility.SetDirty (Navigation.Instance);
+					UpdateLists (target);
+					s_WaypointDropDownIndex = s_Waypoints.IndexOf (newWaypoint) + 2;
+					SelectWaypoint (newWaypoint);
+				}
+
+				GUI.enabled = s_WaypointDropDownIndex > 1;
+				if (GUILayout.Button ("-", EditorStyles.miniButtonRight, GUILayout.Width (kPlusMinusWidth)))
+				{
+					Selection.activeObject = Navigation.Instance.gameObject;
+					Navigation.UnregisterWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
+					DestroyImmediate (s_Waypoints[s_WaypointDropDownIndex - 2].gameObject);
+					s_WaypointDropDownIndex = 0;
+					EditorUtility.SetDirty (Navigation.Instance);
+				}
+				GUI.enabled = true;
+			GUILayout.EndHorizontal ();
+		}
 	}
 	
 	
 	public static void OnWaypointGUI (Waypoint waypoint)
 	{
-		GUILayout.Label ("Waypoint", EditorStyles.boldLabel);
+		GUI.changed = false;
 
 		waypoint.Radius = EditorGUILayout.FloatField ("Radius", waypoint.Radius);
 		waypoint.Tag = EditorGUILayout.TagField ("Tag", waypoint.Tag);
 
 		EditorGUILayout.Space ();
+		
+		GUILayout.Box ("", GUILayout.Height (1), GUILayout.ExpandWidth (true));
+		
+		s_ShowConnectionFoldout = EditorGUILayout.Foldout (s_ShowConnectionFoldout, "Connections", BoldFoldoutStyle);
 
+		if (!s_ShowConnectionFoldout)
+		{
+			if (GUI.changed)
+			{
+				EditorUtility.SetDirty (waypoint);
+			}
+			return;
+		}
+		
 		if (s_ConnectionNames.Length != 0)
 		{
-			GUILayout.Label ("Connections", EditorStyles.boldLabel);
-			s_ConnectionDropDownIndex = EditorGUILayout.Popup (s_ConnectionDropDownIndex, s_ConnectionNames);
+			GUILayout.BeginHorizontal ();
+				s_ConnectionDropDownIndex = EditorGUILayout.Popup (s_ConnectionDropDownIndex, s_ConnectionNames);
+			
+				GUILayout.Space (kDropDownRightButtonOverlap);
+
+				GUI.enabled = s_ConnectionDropDownIndex - 1 > 1;
+				if (GUILayout.Button ("<", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
+				{
+					s_ConnectionDropDownIndex--;
+				}
+				GUI.enabled = s_ConnectionDropDownIndex + 1 < s_ConnectionNames.Length;
+				if (GUILayout.Button (">", EditorStyles.miniButtonRight, GUILayout.Width (kPlusMinusWidth)))
+				{
+					s_ConnectionDropDownIndex++;
+				}
+				GUI.enabled = true;
+			GUILayout.EndHorizontal ();
+			
 			waypoint.Connections[s_ConnectionDropDownIndex].Width = EditorGUILayout.FloatField ("Width", waypoint.Connections[s_ConnectionDropDownIndex].Width);
 			waypoint.Connections[s_ConnectionDropDownIndex].Tag = EditorGUILayout.TagField ("Tag", waypoint.Connections[s_ConnectionDropDownIndex].Tag);
+		}
+		else
+		{
+			GUILayout.Label ("No outgoing connections", EditorStyles.miniLabel);
 		}
 
 		EditorGUILayout.Space ();
@@ -279,7 +352,7 @@ public class PathInspector : Editor
 				
 				float radius = maxWidth;
 
-				while (radius > kMinConnectionWidth)
+				while (radius > s_MinConnectionWidth)
 				{
 					RaycastHit hit;
 					if (!Physics.CheckSphere (one.Position, radius, layerMask) && 
@@ -298,7 +371,7 @@ public class PathInspector : Editor
 						break;
 					}
 					
-					radius -= kAutoConnectSearchStep;
+					radius -= s_AutoConnectSearchStep;
 				}
 			}
 		}
@@ -311,7 +384,7 @@ public class PathInspector : Editor
 		{
 			float radius = maxWidth;
 
-			while (radius > kMinConnectionWidth)
+			while (radius > s_MinConnectionWidth)
 			{
 				if (!Physics.CheckSphere (waypoint.Position, radius, layerMask))
 				{
@@ -320,7 +393,7 @@ public class PathInspector : Editor
 					break;
 				}
 				
-				radius -= kAutoConnectSearchStep;
+				radius -= s_AutoConnectSearchStep;
 			}
 		}
 	}
