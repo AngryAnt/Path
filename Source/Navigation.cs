@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+public delegate void Handler ();
+
 [ExecuteInEditMode]
 public class Navigation : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class Navigation : MonoBehaviour
 	private List<Waypoint> m_Waypoints = new List<Waypoint> ();
 	[SerializeField]
 	private int m_SeekerIterationCap = 10;
+	private Handler m_DrawGizmosHandler = null;
 	
 	
 	public static Navigation Instance
@@ -66,6 +69,19 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	public static Handler DrawGizmosHandler
+	{
+		get
+		{
+			return Instance.m_DrawGizmosHandler;
+		}
+		set
+		{
+			Instance.m_DrawGizmosHandler = value;
+		}
+	}
+	
+	
 	public static int SeekerIterationCap
 	{
 		get
@@ -114,19 +130,9 @@ public class Navigation : MonoBehaviour
 	
 	public void OnDrawGizmos ()
 	{
-		if (!PathInspector.ShowGizmos)
+		if (m_DrawGizmosHandler != null)
 		{
-			return;
-		}
-		
-		foreach (Waypoint waypoint in Instance.m_Waypoints)
-		{
-			waypoint.RenderGizmos ();
-		}
-		
-		if (PathInspector.SelectedWaypoint != null)
-		{
-			PathInspector.SelectedWaypoint.RenderGizmos ();
+			m_DrawGizmosHandler ();
 		}
 	}
 }

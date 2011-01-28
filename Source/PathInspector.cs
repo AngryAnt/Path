@@ -1,3 +1,4 @@
+#if EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -34,6 +35,7 @@ public class PathInspector : Editor
 	
 	public void OnEnable ()
 	{
+		Navigation.DrawGizmosHandler = OnRenderNavigationGizmos;
 		UpdateLists (target);
 	}
 	
@@ -145,6 +147,8 @@ public class PathInspector : Editor
 	
 	public override void OnInspectorGUI ()
 	{
+		Navigation.DrawGizmosHandler = OnRenderNavigationGizmos;
+		
 		OnNavigationGUI (target);
 		
 		Waypoint waypoint = target as Waypoint;
@@ -432,4 +436,74 @@ public class PathInspector : Editor
 			}
 		}
 	}
+	
+	
+	public static void OnRenderNavigationGizmos ()
+	{		
+		if (!ShowGizmos)
+		{
+			return;
+		}
+		
+		foreach (Waypoint waypoint in Navigation.Waypoints)
+		{
+			OnRenderWaypointGizmos (waypoint);
+		}
+		
+		if (SelectedWaypoint != null)
+		{
+			OnRenderWaypointGizmos (SelectedWaypoint);
+		}
+	}
+	
+	
+	public static void OnRenderWaypointGizmos (Waypoint waypoint)
+	{
+		Gizmos.color = SelectedWaypoint == waypoint ? Color.white : WaypointColour;
+		
+		Gizmos.DrawWireSphere (waypoint.Position, waypoint.Radius);
+		foreach (Connection connection in waypoint.Connections)
+		{
+			Gizmos.color = SelectedConnection == connection ? Color.white : ConnectionColour;
+			
+			if (ShowConnectionWidth || SelectedConnection == connection)
+			{
+				Vector3 vector, vectorCrossNormal, fromOffsetA, fromOffsetB, toOffsetA, toOffsetB;
+
+				vector = connection.To.Position - waypoint.Position;
+				vectorCrossNormal = Vector3.Cross (vector, Vector3.up).normalized;
+
+				fromOffsetA = 
+					waypoint.Position +
+					vector.normalized * waypoint.Radius +
+					vectorCrossNormal * -(connection.Width / 2.0f);
+
+				fromOffsetB =
+					waypoint.Position +
+					vector.normalized * waypoint.Radius +
+					vectorCrossNormal * (connection.Width / 2.0f);
+
+				toOffsetA =
+					connection.To.Position - 
+					vector.normalized * connection.To.Radius +
+					vectorCrossNormal * -(connection.Width / 2.0f);
+
+				toOffsetB =
+					connection.To.Position -
+					vector.normalized * connection.To.Radius +
+					vectorCrossNormal * (connection.Width / 2.0f);
+
+				Gizmos.DrawLine (fromOffsetA, toOffsetA);
+				Gizmos.DrawLine (fromOffsetB, toOffsetB);
+				Gizmos.DrawLine (fromOffsetA, fromOffsetB);
+				Gizmos.DrawLine (toOffsetA, connection.To.Position);
+				Gizmos.DrawLine (toOffsetB, connection.To.Position);
+			}
+			else
+			{
+				Gizmos.DrawLine (connection.From.Position, connection.To.Position);
+			}
+		}
+	}
 }
+#endif

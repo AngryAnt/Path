@@ -9,6 +9,12 @@ public class DemoSeeker : MonoBehaviour
 	private Path m_CurrentPath;
 	
 	
+	void Start ()
+	{
+		GetComponent<Navigator> ().RegisterWeightHandler ("Water", OnHandleWaterWeight);
+	}
+	
+	
 	void OnNewPath (Path path)
 	// When pathfinding via Navigator.targetPosition
 	{
@@ -61,5 +67,11 @@ public class DemoSeeker : MonoBehaviour
 			Gizmos.DrawLine (connection.From.Position, connection.To.Position);
 		}
 		Gizmos.DrawLine (m_CurrentPath.EndNode.Position, m_CurrentPath.EndPosition);
+	}
+	
+	
+	float OnHandleWaterWeight (object obj)
+	{
+		return 3.0f;
 	}
 }
