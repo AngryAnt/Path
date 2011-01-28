@@ -135,12 +135,12 @@ public class Waypoint : MonoBehaviour
 	
 	public void RenderGizmos ()
 	{
-		Gizmos.color = PathInspector.SelectedWaypoint == this ? Color.white : Color.yellow;
+		Gizmos.color = PathInspector.SelectedWaypoint == this ? Color.white : PathInspector.WaypointColour;
 		
 		Gizmos.DrawWireSphere (Position, Radius);
 		foreach (Connection connection in Connections)
 		{
-			Gizmos.color = PathInspector.SelectedConnection == connection ? Color.white : Color.green;
+			Gizmos.color = PathInspector.SelectedConnection == connection ? Color.white : PathInspector.ConnectionColour;
 			
 			if (PathInspector.ShowConnectionWidth || PathInspector.SelectedConnection == connection)
 			{

@@ -15,6 +15,8 @@ public class PathInspector : Editor
 	private static bool s_ShowConnectionFoldout = true;
 	private static bool s_ShowGizmos = true;
 	private static bool s_ShowConnectionWidth = true;
+	private static Color s_WaypointColour = Color.yellow;
+	private static Color s_ConnectionColour = Color.green;
 	
 	private static float s_AutoConnectMaxWidth = 10;
 	private static float s_MinConnectionWidth = 1.0f;
@@ -107,6 +109,24 @@ public class PathInspector : Editor
 	}
 	
 	
+	public static Color WaypointColour
+	{
+		get
+		{
+			return s_WaypointColour;
+		}
+	}
+	
+	
+	public static Color ConnectionColour
+	{
+		get
+		{
+			return s_ConnectionColour;
+		}
+	}
+	
+	
 	private static GUIStyle BoldFoldoutStyle
 	{
 		get
@@ -143,6 +163,8 @@ public class PathInspector : Editor
 	{
 		s_ShowGizmos = EditorGUILayout.Toggle ("Gizmos", s_ShowGizmos);
 		s_ShowConnectionWidth = EditorGUILayout.Toggle ("Connection width", s_ShowConnectionWidth);
+		s_WaypointColour = EditorGUILayout.ColorField ("Waypoint colour", s_WaypointColour);
+		s_ConnectionColour = EditorGUILayout.ColorField ("Connection colour", s_ConnectionColour);
 		
 		Navigation.SeekerIterationCap = EditorGUILayout.IntField ("Seeker iterations", Navigation.SeekerIterationCap);
 		
