@@ -265,6 +265,7 @@ public class PathInspector : Editor
 	{
 		GUI.changed = false;
 
+		waypoint.Enabled = EditorGUILayout.Toggle ("Enabled", waypoint.Enabled);
 		waypoint.Radius = EditorGUILayout.FloatField ("Radius", waypoint.Radius);
 		waypoint.Tag = EditorGUILayout.TagField ("Tag", waypoint.Tag);
 
@@ -303,6 +304,7 @@ public class PathInspector : Editor
 				GUI.enabled = true;
 			GUILayout.EndHorizontal ();
 			
+			waypoint.Connections[s_ConnectionDropDownIndex].Enabled = EditorGUILayout.Toggle ("Enabled", waypoint.Connections[s_ConnectionDropDownIndex].Enabled);
 			waypoint.Connections[s_ConnectionDropDownIndex].Width = EditorGUILayout.FloatField ("Width", waypoint.Connections[s_ConnectionDropDownIndex].Width);
 			waypoint.Connections[s_ConnectionDropDownIndex].Tag = EditorGUILayout.TagField ("Tag", waypoint.Connections[s_ConnectionDropDownIndex].Tag);
 		}

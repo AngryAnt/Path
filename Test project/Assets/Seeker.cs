@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public delegate float WeightHandler (object obj);
+
 public class Seeker
 {
 	private Navigator m_Owner;
@@ -28,16 +30,22 @@ public class Seeker
 		foreach (Waypoint waypoint in Navigation.Waypoints)
 		{
 			if (
-				startNode == null ||
-				(startNode.Position - m_StartPosition).sqrMagnitude > (waypoint.Position - m_StartPosition).sqrMagnitude
+				waypoint.Enabled &&
+				(
+					startNode == null ||
+					(startNode.Position - m_StartPosition).sqrMagnitude > (waypoint.Position - m_StartPosition).sqrMagnitude
+				)
 			)
 			{
 				startNode = waypoint;
 			}
 			
 			if (
-				endNode == null ||
-				(endNode.Position - m_EndPosition).sqrMagnitude > (waypoint.Position - m_EndPosition).sqrMagnitude
+				waypoint.Enabled &&
+				(
+					endNode == null ||
+					(endNode.Position - m_EndPosition).sqrMagnitude > (waypoint.Position - m_EndPosition).sqrMagnitude
+				)
 			)
 			{
 				endNode = waypoint;
@@ -53,6 +61,10 @@ public class Seeker
 		Dictionary<Connection, SeekerData> openSet = new Dictionary<Connection, SeekerData> ();
 		foreach (Connection connection in startNode.Connections)
 		{
+			if (!connection.Enabled)
+			{
+				continue;
+			}
 			openSet[connection] = new SeekerData (connection, GScore (connection), HScore (connection));
 		}
 		
@@ -86,7 +98,7 @@ public class Seeker
 				
 				foreach (Connection connection in currentPath.Options)
 				{
-					if (closedSet.Contains (connection) || openSet.ContainsKey (connection))
+					if (!connection.Enabled || closedSet.Contains (connection) || openSet.ContainsKey (connection))
 					{
 						continue;
 					}
@@ -113,7 +125,14 @@ public class Seeker
 	
 	private float GScore (Connection connection)
 	{
-		return connection.Cost;
+		float score = connection.Cost;
+		
+		foreach (WeightHandler handler in m_Owner.WeightHandlers (connection.Tag))
+		{
+			score *= handler (connection);
+		}
+		
+		return score;
 	}
 	
 	

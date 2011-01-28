@@ -88,6 +88,19 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	public bool Enabled
+	{
+		get
+		{
+			return enabled;
+		}
+		set
+		{
+			enabled = value;
+		}
+	}
+	
+	
 	public Vector3 Position
 	{
 		get

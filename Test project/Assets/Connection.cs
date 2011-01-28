@@ -9,6 +9,8 @@ public class Connection
 	private float m_Width = 1.0f;
 	[SerializeField]
 	private string m_Tag = "Untagged";
+	[SerializeField]
+	private bool m_Enabled = true;
 	
 	
 	public Connection (Waypoint from, Waypoint to)
@@ -65,6 +67,19 @@ public class Connection
 		set
 		{
 			m_Tag = value;
+		}
+	}
+	
+	
+	public bool Enabled
+	{
+		get
+		{
+			return m_Enabled;
+		}
+		set
+		{
+			m_Enabled = value;
 		}
 	}
 	
