@@ -135,6 +135,28 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	public static Waypoint GetNearestNode (Vector3 position)
+	{
+		Waypoint nearest = null;
+		
+		foreach (Waypoint waypoint in Navigation.Waypoints)
+		{
+			if (
+				waypoint.Enabled &&
+				(
+					nearest == null ||
+					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
+				)
+			)
+			{
+				nearest = waypoint;
+			}
+		}
+		
+		return nearest;
+	}
+	
+	
 	public void OnDrawGizmos ()
 	{
 		if (m_DrawGizmosHandler != null)

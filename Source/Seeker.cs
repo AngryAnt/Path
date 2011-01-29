@@ -23,34 +23,9 @@ public class Seeker
 	
 	public IEnumerator Seek ()
 	{
-		Waypoint startNode = null, endNode = null;
-		
 		m_StartTime = Time.realtimeSinceStartup;
 		
-		foreach (Waypoint waypoint in Navigation.Waypoints)
-		{
-			if (
-				waypoint.Enabled &&
-				(
-					startNode == null ||
-					(startNode.Position - m_StartPosition).sqrMagnitude > (waypoint.Position - m_StartPosition).sqrMagnitude
-				)
-			)
-			{
-				startNode = waypoint;
-			}
-			
-			if (
-				waypoint.Enabled &&
-				(
-					endNode == null ||
-					(endNode.Position - m_EndPosition).sqrMagnitude > (waypoint.Position - m_EndPosition).sqrMagnitude
-				)
-			)
-			{
-				endNode = waypoint;
-			}
-		}
+		Waypoint startNode = Navigation.GetNearestNode (m_StartPosition), endNode = Navigation.GetNearestNode (m_EndPosition);
 		
 		if (startNode == endNode)
 		{
@@ -114,6 +89,14 @@ public class Seeker
 					{
 						#if DEBUG_SEEKER
 							Debug.Log (string.Format ("Seeker: Skipping disabled connection {0} in path {1}.", connection, currentPath));
+						#endif
+						continue;
+					}
+					
+					if (connection.Width < m_Owner.width || connection.To.Radius * 2.0f < m_Owner.width)
+					{
+						#if DEBUG_SEEKER
+							Debug.Log (string.Format ("Seeker: Skipping too narrow connection {0} in path {1}.", connection, currentPath));
 						#endif
 						continue;
 					}
