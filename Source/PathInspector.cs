@@ -149,6 +149,8 @@ public class PathInspector : Editor
 	{
 		Navigation.DrawGizmosHandler = OnRenderNavigationGizmos;
 		
+		VersionBar ();
+		
 		OnNavigationGUI (target);
 		
 		Waypoint waypoint = target as Waypoint;
@@ -503,6 +505,34 @@ public class PathInspector : Editor
 			{
 				Gizmos.DrawLine (connection.From.Position, connection.To.Position);
 			}
+		}
+	}
+	
+	
+	public static void VersionBar ()
+	{
+		//const float kPadding = 1.0f;
+		const float kSize = 20.0f;
+		GUILayout.BeginHorizontal (GUI.skin.GetStyle ("Box"), GUILayout.Height (kSize), GUILayout.ExpandHeight (false));
+			/*Rect logoRect = GUILayoutUtility.GetRect (kSize, kSize);
+        	GUI.DrawTexture (new Rect (
+				logoRect.x + kPadding,
+				logoRect.y + kPadding,
+				logoRect.width - 2 * kPadding,
+				logoRect.height - 2 * kPadding),
+				Runtime.Resources.Logo);
+			GUILayout.Space (6.0f);*/
+			GUILayout.Label ("Path version " + Version);
+			GUILayout.FlexibleSpace ();
+		GUILayout.EndHorizontal ();
+	}
+	
+	
+	public static string Version
+	{
+		get
+		{
+			return "2.0b1";
 		}
 	}
 }
