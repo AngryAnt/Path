@@ -9,11 +9,16 @@ public class Navigator : MonoBehaviour
 	private Dictionary<string, List<WeightHandler>> m_WeightHandlers = new Dictionary<string, List<WeightHandler>> ();
 	
 	public Vector3 targetPosition;
+	public bool selfTargetOnAwake = true;
 	
 	
 	void Awake ()
 	{
 		m_PathfoundTargetPosition = transform.position;
+		if (selfTargetOnAwake)
+		{
+			targetPosition = transform.position;
+		}
 	}
 	
 	
@@ -22,6 +27,7 @@ public class Navigator : MonoBehaviour
 		if (targetPosition != m_PathfoundTargetPosition)
 		{
 			StartCoroutine (new Seeker (transform.position, targetPosition, this).Seek ());
+			m_PathfoundTargetPosition = targetPosition;
 		}
 	}
 	
@@ -64,7 +70,6 @@ public class Navigator : MonoBehaviour
 	{
 		if (endPosition == targetPosition)
 		{
-			m_PathfoundTargetPosition = targetPosition;
 			SendMessage ("OnTargetUnreachable", SendMessageOptions.DontRequireReceiver);
 			return;
 		}
@@ -77,7 +82,6 @@ public class Navigator : MonoBehaviour
 	{
 		if (endPosition == targetPosition)
 		{
-			m_PathfoundTargetPosition = targetPosition;
 			SendMessage ("OnNewPath", result, SendMessageOptions.DontRequireReceiver);
 			return;
 		}
