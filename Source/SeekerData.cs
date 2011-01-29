@@ -108,4 +108,17 @@ public class SeekerData : System.IComparable
 		
 		return FScore.CompareTo (seeker.FScore);
 	}
+	
+	
+	public override string ToString ()
+	{
+		string value = "Path from " + Path[0].From;
+		
+		foreach (Connection connection in Path)
+		{
+			value += " to " + connection.To;
+		}
+		
+		return value + ".";
+	}
 }

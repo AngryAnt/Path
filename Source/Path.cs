@@ -94,4 +94,28 @@ public class Path
 			}
 		}
 	}
+	
+	
+	public void OnDrawGizmos ()
+	{
+		Gizmos.DrawLine (StartPosition, StartNode.Position);
+		foreach (Connection connection in Segments)
+		{
+			Gizmos.DrawLine (connection.From.Position, connection.To.Position);
+		}
+		Gizmos.DrawLine (EndNode.Position, EndPosition);
+	}
+	
+	
+	public override string ToString ()
+	{
+		string value = "Path from " + StartNode;
+		
+		foreach (Connection connection in Segments)
+		{
+			value += " to " + connection.To;
+		}
+		
+		return value + ".";
+	}
 }

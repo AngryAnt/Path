@@ -61,12 +61,7 @@ public class DemoSeeker : MonoBehaviour
 			return;
 		}
 		
-		Gizmos.DrawLine (m_CurrentPath.StartPosition, m_CurrentPath.StartNode.Position);
-		foreach (Connection connection in m_CurrentPath.Segments)
-		{
-			Gizmos.DrawLine (connection.From.Position, connection.To.Position);
-		}
-		Gizmos.DrawLine (m_CurrentPath.EndNode.Position, m_CurrentPath.EndPosition);
+		m_CurrentPath.OnDrawGizmos ();
 	}
 	
 	
