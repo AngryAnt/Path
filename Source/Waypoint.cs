@@ -12,7 +12,7 @@ public class Waypoint : MonoBehaviour
 	public float m_Radius = 1;
 	
 	
-	void OnEnable ()
+	void Start ()
 	{
 		Navigation.RegisterWaypoint (this);
 	}

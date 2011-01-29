@@ -34,12 +34,12 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	void OnEnabled ()
+	void Awake ()
 	{
 		if (s_Instance != null && s_Instance != this)
 		{
 			Debug.LogError ("Second singleton instance. Bailing.");
-			Destroy (this);
+			Destroy (gameObject);
 			
 			return;
 		}
@@ -117,6 +117,11 @@ public class Navigation : MonoBehaviour
 	
 	public static Waypoint UnregisterWaypoint (Waypoint waypoint)
 	{
+		if (s_Instance == null)
+		{
+			return waypoint;
+		}
+		
 		Instance.m_Waypoints.Remove (waypoint);
 		
 		foreach (Waypoint other in Instance.m_Waypoints)
