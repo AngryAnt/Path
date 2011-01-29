@@ -5,7 +5,9 @@ using System.Collections.ObjectModel;
 
 public delegate void Handler ();
 
+
 [ExecuteInEditMode]
+[AddComponentMenu ("Path/Navigation")]
 public class Navigation : MonoBehaviour
 {
 	private static Navigation s_Instance;

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+
+[AddComponentMenu ("Path/Navigator")]
 public class Navigator : MonoBehaviour
 {
 	private Vector3 m_PathfoundTargetPosition;
