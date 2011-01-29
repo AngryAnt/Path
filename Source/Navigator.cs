@@ -10,7 +10,8 @@ public class Navigator : MonoBehaviour
 	private Vector3 m_PathfoundTargetPosition;
 	private Dictionary<string, List<WeightHandler>> m_WeightHandlers = new Dictionary<string, List<WeightHandler>> ();
 	
-	public Vector3 targetPosition;
+	public Vector3 targetPosition = Vector3.zero;
+	public float width = 1.0f;
 	public bool selfTargetOnAwake = true;
 	
 	
