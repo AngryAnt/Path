@@ -54,6 +54,9 @@ public class Seeker
 		
 		if (startNode == endNode)
 		{
+			#if DEBUG_SEEKER
+				Debug.Log (string.Format ("Seeker: Start and end node shared: {0}. Early out.", startNode));
+			#endif
 			OnPathResult (new Path (m_StartPosition, m_EndPosition));
 			yield break;
 		}
@@ -63,9 +66,15 @@ public class Seeker
 		{
 			if (!connection.Enabled)
 			{
+				#if DEBUG_SEEKER
+					Debug.Log (string.Format ("Seeker: Skipping disabled connection {0}.", connection));
+				#endif
 				continue;
 			}
 			openSet[connection] = new SeekerData (connection, GScore (connection), HScore (connection));
+			#if DEBUG_SEEKER
+				Debug.Log ("Added " + connection + " to open set.");
+			#endif
 		}
 		
 		List<Connection> closedSet = new List<Connection> ();
@@ -78,6 +87,9 @@ public class Seeker
 				if (openSet.Count == 0)
 				// Unable to find path
 				{
+					#if DEBUG_SEEKER
+						Debug.Log (string.Format ("Seeker: Empty open set while trying to pathfind from {0} to {1}. Failure.", startNode, endNode));
+					#endif
 					OnPathFailed ();
 					yield break;
 				}
@@ -98,12 +110,35 @@ public class Seeker
 				
 				foreach (Connection connection in currentPath.Options)
 				{
-					if (!connection.Enabled || closedSet.Contains (connection) || openSet.ContainsKey (connection))
+					if (!connection.Enabled)
 					{
+						#if DEBUG_SEEKER
+							Debug.Log (string.Format ("Seeker: Skipping disabled connection {0} in path {1}.", connection, currentPath));
+						#endif
+						continue;
+					}
+					
+					if (closedSet.Contains (connection))
+					{
+						#if DEBUG_SEEKER
+							Debug.Log (string.Format ("Seeker: Skipping closed set connection {0} in path {1}.", connection, currentPath));
+						#endif
+						continue;
+					}
+					
+					if (openSet.ContainsKey (connection))
+					{
+						#if DEBUG_SEEKER
+							Debug.Log (string.Format ("Seeker: Skipping open set connection {0} in path {1}.", connection, currentPath));
+						#endif
 						continue;
 					}
 					
 					openSet[connection] = new SeekerData (currentPath, connection, GScore (connection), HScore (connection));
+					
+					#if DEBUG_SEEKER
+						Debug.Log ("Added " + connection + " to open set.");
+					#endif
 				}
 			}
 		}
