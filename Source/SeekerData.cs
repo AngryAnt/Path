@@ -89,7 +89,7 @@ public class SeekerData : System.IComparable
 			
 			if (Path.Count > 1)
 			{
-				connections.RemoveAll (x => x.To != LastSegment.From);
+				connections.RemoveAll (x => x.To == LastSegment.From);
 			}
 			
 			return connections;
