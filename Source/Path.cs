@@ -10,14 +10,14 @@ public class Path
 	private float m_SeekTime;
 	
 	
-	public Path (Vector3 startPosition, Vector3 endPosition)
+	internal Path (Vector3 startPosition, Vector3 endPosition)
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
 	}
 	
 	
-	public Path (Vector3 startPosition, Vector3 endPosition, SeekerData data)
+	internal Path (Vector3 startPosition, Vector3 endPosition, SeekerData data)
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;

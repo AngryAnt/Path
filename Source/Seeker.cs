@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public delegate float WeightHandler (object obj);
 
-public class Seeker
+internal class Seeker
 {
 	private Navigator m_Owner;
 	private Vector3 m_StartPosition, m_EndPosition;

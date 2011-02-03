@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-public class SeekerData : System.IComparable
+internal class SeekerData : System.IComparable
 {
 	private List<Connection> m_Path = new List<Connection> ();
 	private float m_GScore, m_HScore;
