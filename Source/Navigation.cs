@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System;
 
 public delegate void Handler ();
 
@@ -16,6 +17,7 @@ public class Navigation : MonoBehaviour
 	[SerializeField]
 	private int m_SeekerIterationCap = 10;
 	private Handler m_DrawGizmosHandler = null;
+	private List<WeakReference> m_CalculatedPathes = new List<WeakReference> ();
 	
 	
 	public static Navigation Instance
@@ -154,6 +156,56 @@ public class Navigation : MonoBehaviour
 		}
 		
 		return nearest;
+	}
+	
+	
+	internal static void WatchPath (Path path)
+	{
+		WeakReference reference = new WeakReference (path);
+		if (!Instance.m_CalculatedPathes.Contains (reference))
+		{
+			Instance.m_CalculatedPathes.Add (reference);
+		}
+	}
+	
+	
+	private void HandleDisable (object subject)
+	{
+		Waypoint waypoint = subject as Waypoint;
+		Connection connection = subject as Connection;
+		
+		for (int i = 0; i < m_CalculatedPathes.Count;)
+		{
+			if (!m_CalculatedPathes[i].IsAlive)
+			{
+				m_CalculatedPathes.RemoveAt (i);
+				continue;
+			}
+			
+			Path path = (Path)m_CalculatedPathes[i].Target;
+			if (waypoint != null && path.Contains (waypoint))
+			{
+				path.Owner.gameObject.SendMessage ("OnPathInvalidated", path, SendMessageOptions.DontRequireReceiver);
+			}
+			else if (connection != null && path.Contains (connection))
+			{
+				path.Owner.gameObject.SendMessage ("OnPathInvalidated", path, SendMessageOptions.DontRequireReceiver);
+			}
+			
+			i++;
+		}
+	}
+	
+	
+	internal static void OnDisable (Waypoint waypoint)
+	{
+		Instance.HandleDisable (waypoint);
+	}
+	
+	
+	internal static void OnDisable (Connection connection)
+	{
+		Instance.HandleDisable (connection);
 	}
 	
 	

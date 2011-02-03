@@ -80,6 +80,10 @@ public class Connection
 		set
 		{
 			m_Enabled = value;
+			if (!m_Enabled)
+			{
+				Navigation.OnDisable (this);
+			}
 		}
 	}
 	

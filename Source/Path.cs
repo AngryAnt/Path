@@ -8,20 +8,23 @@ public class Path
 	private Vector3 m_StartPosition, m_EndPosition;
 	private List<Connection> m_Segments = new List<Connection> ();
 	private float m_SeekTime;
+	private Navigator m_Owner;
 	
 	
-	internal Path (Vector3 startPosition, Vector3 endPosition)
+	internal Path (Vector3 startPosition, Vector3 endPosition, Navigator owner)
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
+		m_Owner = owner;
 	}
 	
 	
-	internal Path (Vector3 startPosition, Vector3 endPosition, SeekerData data)
+	internal Path (Vector3 startPosition, Vector3 endPosition, SeekerData data, Navigator owner)
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
 		m_Segments = new List<Connection> (data.Path);
+		m_Owner = owner;
 	}
 	
 	
@@ -47,7 +50,7 @@ public class Path
 	{
 		get
 		{
-			return m_Segments[0].From;
+			return m_Segments.Count > 0 ? m_Segments[0].From : null;
 		}
 	}
 	
@@ -56,7 +59,7 @@ public class Path
 	{
 		get
 		{
-			return m_Segments[m_Segments.Count - 1].To;
+			return m_Segments.Count > 0 ? m_Segments[m_Segments.Count - 1].To : null;
 		}
 	}
 	
@@ -83,6 +86,15 @@ public class Path
 	}
 	
 	
+	public Navigator Owner
+	{
+		get
+		{
+			return m_Owner;
+		}
+	}
+	
+	
 	public void ArrivedAt (Waypoint waypoint)
 	{
 		for (int i = 0; i < m_Segments.Count; i++)
@@ -93,6 +105,31 @@ public class Path
 				return;
 			}
 		}
+	}
+	
+	
+	public bool Contains (Connection connection)
+	{
+		return m_Segments.Contains (connection);
+	}
+	
+	
+	public bool Contains (Waypoint waypoint)
+	{
+		if (waypoint == StartNode)
+		{
+			return true;
+		}
+		
+		foreach (Connection connection in m_Segments)
+		{
+			if (connection.To == waypoint)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	

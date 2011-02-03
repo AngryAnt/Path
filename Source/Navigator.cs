@@ -69,7 +69,7 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
-	public void OnPathFailed (Vector3 endPosition)
+	internal void OnPathFailed (Vector3 endPosition)
 	{
 		if (endPosition == targetPosition)
 		{
@@ -81,7 +81,7 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
-	public void OnPathResult (Vector3 endPosition, Path result)
+	internal void OnPathResult (Vector3 endPosition, Path result)
 	{
 		if (endPosition == targetPosition)
 		{

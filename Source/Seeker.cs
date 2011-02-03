@@ -32,7 +32,7 @@ internal class Seeker
 			#if DEBUG_SEEKER
 				Debug.Log (string.Format ("Seeker: Start and end node shared: {0}. Early out.", startNode));
 			#endif
-			OnPathResult (new Path (m_StartPosition, m_EndPosition));
+			OnPathResult (new Path (m_StartPosition, m_EndPosition, m_Owner));
 			yield break;
 		}
 		
@@ -76,7 +76,7 @@ internal class Seeker
 				if (currentPath.Destination == endNode)
 				// Did find the path
 				{
-					OnPathResult (new Path (m_StartPosition, m_EndPosition, currentPath));
+					OnPathResult (new Path (m_StartPosition, m_EndPosition, currentPath, m_Owner));
 					yield break;
 				}
 				
@@ -132,6 +132,7 @@ internal class Seeker
 	{
 		path.SeekTime = (float)(Time.realtimeSinceStartup - m_StartTime);
 		m_Owner.OnPathResult (m_EndPosition, path);
+		Navigation.WatchPath (path);
 	}
 	
 	

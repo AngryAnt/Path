@@ -45,6 +45,13 @@ public class DemoSeeker : MonoBehaviour
 	}
 	
 	
+	void OnPathInvalidated (Path path)
+	// When a path requested by a Navigator on this GameObject is no longer valid - due to a connection or node disabling or removal
+	{
+		Debug.Log ("The path from " + path.StartNode + " to " + path.EndNode + " is no longer valid.");
+	}
+	
+	
 	void OnGUI ()
 	{
 		if (GUILayout.Button ("Pathfind"))

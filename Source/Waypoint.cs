@@ -18,6 +18,12 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	void OnDisable ()
+	{
+		Navigation.OnDisable (this);
+	}
+	
+	
 	void OnDestroy ()
 	{
 		Navigation.UnregisterWaypoint (this);
@@ -40,6 +46,7 @@ public class Waypoint : MonoBehaviour
 	public void RemoveConnection (Connection connection)
 	{
 		m_Connections.Remove (connection);
+		Navigation.OnDisable (connection);
 	}
 	
 	
