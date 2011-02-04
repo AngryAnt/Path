@@ -23,8 +23,8 @@ my $debugOptions = $optionRelease == 0 ? "-d:DEBUG" : "";
 $debugOptions .= $debugOptions == 1 ? " -d:DEBUG_SEEKER" : "";
 
 print ("Building runtime assembly..." . ($optionRelease == 0 ? " Debug build." : " Release.") . "\n");
-BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME $debugOptions -r:$assemblyUnityEngine");
-BuildAssembly ("library", "Path.Editor.dll", "Source/PathInspector.cs", "-d:EDITOR $debugOptions -r:Path.Runtime.dll,$assemblyUnityEngine,$assemblyUnityEditor");
+BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME -keyfile:Path.snk $debugOptions -r:$assemblyUnityEngine");
+BuildAssembly ("library", "Path.Editor.dll", "Source/PathInspector.cs", "-d:EDITOR $debugOptions -keyfile:Path.snk -r:Path.Runtime.dll,$assemblyUnityEngine,$assemblyUnityEditor");
 
 print ("Copying assemblies to test project.\n");
 system ("cp Path.Runtime.dll Test\\ project/Assets/Path");

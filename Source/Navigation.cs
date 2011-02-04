@@ -4,6 +4,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System;
 
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo ("Path.Editor, PublicKey=" +
+"0024000004800000940000000602000000240000525341310004000011000000155975c8857abb" + 
+"caf0be25ba0bb94c9298e2ad84cd98efb15e34b8763884597663c14e12b9276aa8e97b330421e8" + 
+"31660b20014180df8d00316fc6a6633f0a848545c18f0b2f040141d95baa8af56b40286706b211" + 
+"ff04d0c0ce4de0f726b8f082bbd86f020a7507a5a1c7a4be8400416b2f04abc9c537f72369f137" + 
+"f0f15987")]
+
+
 public delegate void Handler ();
 
 
@@ -20,7 +29,7 @@ public class Navigation : MonoBehaviour
 	private List<WeakReference> m_CalculatedPathes = new List<WeakReference> ();
 	
 	
-	public static Navigation Instance
+	internal static Navigation Instance
 	{
 		get
 		{
@@ -73,7 +82,7 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	public static Handler DrawGizmosHandler
+	internal static Handler DrawGizmosHandler
 	{
 		get
 		{
@@ -108,7 +117,7 @@ public class Navigation : MonoBehaviour
 	}
 
 	
-	public static Waypoint RegisterWaypoint (Waypoint waypoint)
+	internal static Waypoint RegisterWaypoint (Waypoint waypoint)
 	{
 		if (!Instance.m_Waypoints.Contains (waypoint))
 		{
@@ -119,7 +128,7 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	public static Waypoint UnregisterWaypoint (Waypoint waypoint)
+	internal static Waypoint UnregisterWaypoint (Waypoint waypoint)
 	{
 		if (s_Instance == null)
 		{
@@ -209,7 +218,7 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	public void OnDrawGizmos ()
+	internal void OnDrawGizmos ()
 	{
 		if (m_DrawGizmosHandler != null)
 		{

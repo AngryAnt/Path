@@ -58,7 +58,7 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
-	public ReadOnlyCollection<WeightHandler> WeightHandlers (string tag)
+	internal ReadOnlyCollection<WeightHandler> WeightHandlers (string tag)
 	{
 		if (m_WeightHandlers.ContainsKey (tag))
 		{

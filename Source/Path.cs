@@ -133,7 +133,7 @@ public class Path
 	}
 	
 	
-	public void OnDrawGizmos ()
+	internal void OnDrawGizmos ()
 	{
 		Gizmos.DrawLine (StartPosition, StartNode.Position);
 		foreach (Connection connection in Segments)
