@@ -16,6 +16,9 @@ using System;
 public delegate void Handler ();
 
 
+/// Path system root.
+/// This class is the core of the Path system. All nodes and connections register here and the Navigator
+/// pulls data from here - as can your own code.
 [ExecuteInEditMode]
 [AddComponentMenu ("Path/Navigation")]
 public class Navigation : MonoBehaviour

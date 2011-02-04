@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
+/// Runtime pathfinding interface.
+/// This is your runtime interface for Path. The navigator can be given a position to pathfind for,
+/// via the targetPosition variable, or you can call RequestPath in order to pre-calculate pathes.
 [AddComponentMenu ("Path/Navigator")]
 public class Navigator : MonoBehaviour
 {
@@ -35,6 +38,9 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
+	/// Pre-calculation interface.
+	/// This method enables you to have a path calculated for you, independent of your currently set targetPosition.
+	/// It is useful for, for instance, pre-calculating pathes to nearest cover or exit.
 	public void RequestPath (Vector3 startPosition, Vector3 endPosition)
 	{
 		StartCoroutine (new Seeker (startPosition, endPosition, this).Seek ());

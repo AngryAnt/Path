@@ -26,7 +26,10 @@ print ("Building runtime assembly..." . ($optionRelease == 0 ? " Debug build." :
 BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME -keyfile:Path.snk $debugOptions -r:$assemblyUnityEngine");
 BuildAssembly ("library", "Path.Editor.dll", "Source/PathInspector.cs", "-d:EDITOR $debugOptions -keyfile:Path.snk -r:Path.Runtime.dll,$assemblyUnityEngine,$assemblyUnityEditor");
 
-print ("Copying assemblies to test project.\n");
+print ("Generating documentation...\n");
+system ("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile");
+
+print ("Copying assemblies to test project...\n");
 system ("cp Path.Runtime.dll Test\\ project/Assets/Path");
 system ("cp Path.Editor.dll Test\\ project/Assets/Path/Editor");
 
