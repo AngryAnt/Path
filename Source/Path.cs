@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+
+/// Path pathfinding result.
 public class Path
 {
 	private Vector3 m_StartPosition, m_EndPosition;
@@ -28,6 +30,7 @@ public class Path
 	}
 	
 	
+	/// The position where this Path starts.
 	public Vector3 StartPosition
 	{
 		get
@@ -37,6 +40,7 @@ public class Path
 	}
 	
 	
+	/// The end position where this Path leads to.
 	public Vector3 EndPosition
 	{
 		get
@@ -46,6 +50,7 @@ public class Path
 	}
 	
 	
+	/// The node where this Path starts.
 	public Waypoint StartNode
 	{
 		get
@@ -55,6 +60,7 @@ public class Path
 	}
 	
 	
+	/// The node where this Path ends.
 	public Waypoint EndNode
 	{
 		get
@@ -64,6 +70,7 @@ public class Path
 	}
 	
 	
+	/// The segments making up this Path.
 	public ReadOnlyCollection<Connection> Segments
 	{
 		get
@@ -73,6 +80,7 @@ public class Path
 	}
 	
 	
+	/// The time it took to find this Path.
 	public float SeekTime
 	{
 		get
@@ -86,6 +94,7 @@ public class Path
 	}
 	
 	
+	/// The Navigator which requested this Path.
 	public Navigator Owner
 	{
 		get
@@ -95,6 +104,7 @@ public class Path
 	}
 	
 	
+	/// Is this Path still valid?
 	public bool Valid
 	{
 		get
@@ -126,6 +136,7 @@ public class Path
 	}
 	
 	
+	/// Signal that the Path user has now arrived at this node. Removes the node from the Path and any nodes leading up to it.
 	public void ArrivedAt (Waypoint waypoint)
 	{
 		for (int i = 0; i < m_Segments.Count; i++)
@@ -139,12 +150,14 @@ public class Path
 	}
 	
 	
+	/// Does this Path contain the specified Connection?
 	public bool Contains (Connection connection)
 	{
 		return m_Segments.Contains (connection);
 	}
 	
 	
+	/// Does this Path contain the specified Waypoint?
 	public bool Contains (Waypoint waypoint)
 	{
 		if (waypoint == StartNode)
@@ -164,6 +177,7 @@ public class Path
 	}
 	
 	
+	/// Handy for visualizing the Path via the Gizmos system.
 	public void OnDrawGizmos ()
 	{
 		Gizmos.DrawLine (StartPosition, StartNode.Position);
@@ -175,6 +189,7 @@ public class Path
 	}
 	
 	
+	/// Overridden for easy debugging.
 	public override string ToString ()
 	{
 		string value = "Path from " + StartNode;
