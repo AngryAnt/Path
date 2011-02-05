@@ -30,7 +30,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
-	public Connection AddConnection (Connection connection)
+	internal Connection AddConnection (Connection connection)
 	{
 		Resources.Assert (connection.From == this);
 		
