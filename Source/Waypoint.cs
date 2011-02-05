@@ -56,7 +56,7 @@ public class Waypoint : MonoBehaviour
 		{
 			if (m_Connections[i].To == waypoint)
 			{
-				m_Connections.RemoveAt (i);
+				RemoveConnection (m_Connections[i]);
 			}
 			else
 			{
