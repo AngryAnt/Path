@@ -188,12 +188,21 @@ public class PathInspector : Editor
 			GUILayout.BeginVertical ();
 				if (GUILayout.Button ("Auto connect", EditorStyles.miniButton))
 				{
-					AutoConnect (1 << s_AutoConnectBlockingLayer, s_AutoConnectMaxWidth);
+					Navigation.AutoConnect (1 << s_AutoConnectBlockingLayer, s_MinConnectionWidth, s_AutoConnectMaxWidth, s_AutoConnectSearchStep);
+					foreach (Waypoint waypoint in Navigation.Waypoints)
+					{
+						EditorUtility.SetDirty (waypoint);
+					}
+					EditorUtility.SetDirty (Navigation.Instance);
 					UpdateLists (target);
 				}
 				if (GUILayout.Button ("Auto scale", EditorStyles.miniButton))
 				{
-					AutoScale (1 << s_AutoConnectBlockingLayer, s_AutoConnectMaxWidth);
+					Navigation.AutoScale (1 << s_AutoConnectBlockingLayer, s_MinConnectionWidth, s_AutoConnectMaxWidth, s_AutoConnectSearchStep);
+					foreach (Waypoint waypoint in Navigation.Waypoints)
+					{
+						EditorUtility.SetDirty (waypoint);
+					}
 					EditorUtility.SetDirty (Navigation.Instance);
 				}
 			GUILayout.EndVertical ();
@@ -377,66 +386,6 @@ public class PathInspector : Editor
 		Selection.activeObject = waypoint.gameObject;
 		s_ConnectionDropDownIndex = 0;
 		UpdateLists (waypoint);
-	}
-	
-	
-	public static void AutoConnect (LayerMask layerMask, float maxWidth)
-	{
-		foreach (Waypoint one in s_Waypoints)
-		{
-			foreach (Waypoint other in s_Waypoints)
-			{
-				if (one == other)
-				{
-					continue;
-				}
-				
-				float radius = maxWidth;
-
-				while (radius > s_MinConnectionWidth)
-				{
-					RaycastHit hit;
-					if (!Physics.CheckSphere (one.Position, radius, layerMask) && 
-						!Physics.SphereCast (
-							one.Position,
-							radius,
-							other.Position - one.Position,
-							out hit,
-							(other.Position - one.Position).magnitude,
-							layerMask
-						)
-					)
-					{
-						new Connection (one, other).Width = radius * 2.0f;
-						EditorUtility.SetDirty (one);
-						break;
-					}
-					
-					radius -= s_AutoConnectSearchStep;
-				}
-			}
-		}
-	}
-	
-	
-	public static void AutoScale (LayerMask layerMask, float maxWidth)
-	{
-		foreach (Waypoint waypoint in s_Waypoints)
-		{
-			float radius = maxWidth;
-
-			while (radius > s_MinConnectionWidth)
-			{
-				if (!Physics.CheckSphere (waypoint.Position, radius, layerMask))
-				{
-					waypoint.Radius = radius;
-					EditorUtility.SetDirty (waypoint);
-					break;
-				}
-				
-				radius -= s_AutoConnectSearchStep;
-			}
-		}
 	}
 	
 	

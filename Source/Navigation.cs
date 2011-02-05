@@ -118,6 +118,86 @@ public class Navigation : MonoBehaviour
 			return Instance.m_Waypoints.AsReadOnly ();
 		}
 	}
+	
+	
+	public static Waypoint GetNearestNode (Vector3 position)
+	{
+		Waypoint nearest = null;
+		
+		foreach (Waypoint waypoint in Navigation.Waypoints)
+		{
+			if (
+				waypoint.Enabled &&
+				(
+					nearest == null ||
+					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
+				)
+			)
+			{
+				nearest = waypoint;
+			}
+		}
+		
+		return nearest;
+	}
+	
+	
+	public static void AutoScale (LayerMask layerMask, float minWidth, float maxWidth, float step)
+	{
+		foreach (Waypoint waypoint in Instance.m_Waypoints)
+		{
+			float radius = maxWidth;
+
+			while (radius > minWidth)
+			{
+				if (!Physics.CheckSphere (waypoint.Position, radius, layerMask))
+				{
+					waypoint.Radius = radius;
+					break;
+				}
+				
+				radius -= step;
+			}
+		}
+	}
+	
+	
+	public static void AutoConnect (LayerMask layerMask, float minWidth, float maxWidth, float step)
+	{
+		foreach (Waypoint one in Instance.m_Waypoints)
+		{
+			foreach (Waypoint other in Instance.m_Waypoints)
+			{
+				if (one == other || one.ConnectsTo (other))
+				{
+					continue;
+				}
+				
+				float radius = maxWidth;
+
+				while (radius > minWidth)
+				{
+					RaycastHit hit;
+					if (!Physics.CheckSphere (one.Position, radius, layerMask) && 
+						!Physics.SphereCast (
+							one.Position,
+							radius,
+							other.Position - one.Position,
+							out hit,
+							(other.Position - one.Position).magnitude,
+							layerMask
+						)
+					)
+					{
+						new Connection (one, other).Width = radius * 2.0f;
+						break;
+					}
+					
+					radius -= step;
+				}
+			}
+		}
+	}
 
 	
 	internal static Waypoint RegisterWaypoint (Waypoint waypoint)
@@ -146,28 +226,6 @@ public class Navigation : MonoBehaviour
 		}
 		
 		return waypoint;
-	}
-	
-	
-	public static Waypoint GetNearestNode (Vector3 position)
-	{
-		Waypoint nearest = null;
-		
-		foreach (Waypoint waypoint in Navigation.Waypoints)
-		{
-			if (
-				waypoint.Enabled &&
-				(
-					nearest == null ||
-					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
-				)
-			)
-			{
-				nearest = waypoint;
-			}
-		}
-		
-		return nearest;
 	}
 	
 	
