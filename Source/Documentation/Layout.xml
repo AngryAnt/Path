@@ -1,0 +1,27 @@
+<doxygenlayout version="1.0">
+	
+	<navindex visible="no">
+	</navindex>
+
+	<class>
+		<usedfiles visible="yes"/>
+		<briefdescription visible="yes"/>
+	    <includes visible="$SHOW_INCLUDE_FILES"/>
+	    <inheritancegraph visible="$CLASS_GRAPH"/>
+	    <collaborationgraph visible="$COLLABORATION_GRAPH"/>
+	    <allmemberslink visible="yes"/>
+	</class>
+
+	<namespace>
+	</namespace>
+
+	<file>
+	</file>
+
+	<group>
+	</group>
+
+	<directory>
+	</directory>
+
+</doxygenlayout>
