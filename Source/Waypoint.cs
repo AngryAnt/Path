@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+
+/// A Path waypoint. Each waypoint is defined by a Position, a Radius and optinally a list of Connections.
 [ExecuteInEditMode]
 public class Waypoint : MonoBehaviour
 {
@@ -43,6 +45,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Removes a given connection.
 	public void RemoveConnection (Connection connection)
 	{
 		m_Connections.Remove (connection);
@@ -50,6 +53,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Removes any connection to the specified node.
 	public void RemoveConnection (Waypoint waypoint)
 	{
 		for (int i = 0; i < m_Connections.Count;)
@@ -66,6 +70,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Returns true of this Waypoint connects to the given node.
 	public bool ConnectsTo (Waypoint waypoint)
 	{
 		foreach (Connection connection in m_Connections)
@@ -80,12 +85,14 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Removes all outgoing connections from the node.
 	public void Disconnect ()
 	{
 		m_Connections = new List<Connection> ();
 	}
 	
 	
+	/// The list of connections going out from this Waypoint.
 	public ReadOnlyCollection<Connection> Connections
 	{
 		get
@@ -95,6 +102,8 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// The Waypoint Enabled flag. If set to false, pathfinding will ignore the Waypoint and any already
+	/// found pathes going through this Waypoint will be invalidated.
 	public bool Enabled
 	{
 		get
@@ -108,6 +117,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// The Waypoint position.
 	public Vector3 Position
 	{
 		get
@@ -121,6 +131,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// The Waypoint radius. Waypoints narrower than the pathfinding Navigator will not be picked.
 	public float Radius
 	{
 		get
@@ -134,6 +145,8 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// The Waypoint Tag. This is used to weigh the Waypoint when pathfinding, assuming the pathfinding
+	/// Navigator has registered any weight handlers with the tag.
 	public string Tag
 	{
 		get
@@ -147,6 +160,7 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Overridden for easy debugging.
 	public override string ToString ()
 	{
 		return gameObject.name;
