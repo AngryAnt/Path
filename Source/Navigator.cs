@@ -6,6 +6,19 @@ using System.Collections.ObjectModel;
 
 /// Runtime pathfinding interface. This is your runtime interface for Path. The navigator can be given a position to
 /// pathfind for, via the targetPosition variable, or you can call RequestPath in order to pre-calculate pathes.
+///
+/// Sent messages:
+/// <table border="0" cellpadding="10">
+/// <tr><td style="white-space:nowrap;">OnNewPath (Path path)</td><td>Sent when a new path is available, after a new targetPosition has been
+/// specified.</td></tr>
+/// <tr><td style="white-space:nowrap;">OnTargetUnreachable ()</td><td>Sent when a given targetPosition is unreachable.</td></tr>
+/// <tr><td style="white-space:nowrap;">OnPathAvailable (Path path)</td><td>Sent when pathfinding a new path is available, after being requested
+/// via RequestPath.</td></tr>
+/// <tr><td style="white-space:nowrap;">OnPathUnavailable ()</td><td>Sent when a RequestPath call fails to produce a valid path.</td></tr>
+/// <tr><td style="white-space:nowrap;">OnPathInvalidated (Path path)</td><td>Send when the given path has been invalidated - by a connection or
+/// node being disabled or deleted. A given Navigator receives this message because the Path was originally requested
+/// by the Navigator - either via targetPosition or RequestPath.</td></tr>
+/// </table>
 [AddComponentMenu ("Path/Navigator")]
 public class Navigator : MonoBehaviour
 {
