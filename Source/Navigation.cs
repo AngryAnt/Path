@@ -16,9 +16,8 @@ using System;
 internal delegate void Handler ();
 
 
-/// Path system root.
-/// This class is the core of the Path system. All nodes and connections register here and the Navigator
-/// pulls data from here - as can your own code.
+/// Path system root. This class is the core of the Path system. All nodes and connections register here and the
+/// Navigator pulls data from here - as can your own code.
 [ExecuteInEditMode]
 [AddComponentMenu ("Path/Navigation")]
 public class Navigation : MonoBehaviour
@@ -98,6 +97,9 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// Pathfinding resource throttle. The SeekerIterationCap specifies how many pathfinding iterations can be
+	/// run per frame. Reduce this number if you are getting Path related performance issues or increase if
+	/// pathfinding starts taking a while. Default value is 10.
 	public static int SeekerIterationCap
 	{
 		get
@@ -111,6 +113,9 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// All registered waypoints. When a waypoint - in the standard scene setup or instantiated runtime - is
+	/// set up, it registers with Navigation. Similarly, when it is destroyed, it unregisters. This API point
+	/// gives you access to all the in-scene Waypoints.
 	public static ReadOnlyCollection<Waypoint> Waypoints
 	{
 		get
@@ -120,6 +125,8 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// Returns nearest node to a position for a given Navigator. If the Navigator has non-zero pathBlockingLayers
+	/// specified, each potential node will be checked for accessibility with a sphere cast.
 	public static Waypoint GetNearestNode (Vector3 position, Navigator navigator)
 	{
 		Waypoint nearest = null;
@@ -156,12 +163,16 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// Returns nearest node to a position.
 	public static Waypoint GetNearestNode (Vector3 position)
 	{
 		return GetNearestNode (position, null);
 	}
 	
 	
+	/// Maximize scale of all waypoints. Also available in the inspector, this method lets you scale up all
+	/// waypoints so that they have the biggest possible radius, while not overlapping any colliders in the given
+	/// layerMask.
 	public static void AutoScale (LayerMask layerMask, float minWidth, float maxWidth, float step)
 	{
 		foreach (Waypoint waypoint in Instance.m_Waypoints)
@@ -182,6 +193,9 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// Form any available, non-existing, waypoint connections. Also available in the inspector, this method lets
+	/// you connect any waypoints that can, which are not already connected. Like AutoScale, the established
+	/// connections will be formed based on the given layerMask and maximized in size.
 	public static void AutoConnect (LayerMask layerMask, float minWidth, float maxWidth, float step)
 	{
 		foreach (Waypoint one in Instance.m_Waypoints)
