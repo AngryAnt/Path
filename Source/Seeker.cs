@@ -25,7 +25,8 @@ internal class Seeker
 	{
 		m_StartTime = Time.realtimeSinceStartup;
 		
-		Waypoint startNode = Navigation.GetNearestNode (m_StartPosition), endNode = Navigation.GetNearestNode (m_EndPosition);
+		Waypoint	startNode = Navigation.GetNearestNode (m_StartPosition, m_Owner),
+					endNode = Navigation.GetNearestNode (m_EndPosition, m_Owner);
 		
 		if (startNode == endNode)
 		{

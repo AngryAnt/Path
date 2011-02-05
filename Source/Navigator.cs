@@ -16,6 +16,7 @@ public class Navigator : MonoBehaviour
 	public Vector3 targetPosition = Vector3.zero;
 	public float width = 1.0f;
 	public bool selfTargetOnAwake = true;
+	public LayerMask pathBlockingLayers = 0;
 	
 	
 	void Awake ()

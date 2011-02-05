@@ -120,17 +120,30 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	public static Waypoint GetNearestNode (Vector3 position)
+	public static Waypoint GetNearestNode (Vector3 position, Navigator navigator)
 	{
 		Waypoint nearest = null;
 		
 		foreach (Waypoint waypoint in Navigation.Waypoints)
 		{
+			RaycastHit hit;
 			if (
 				waypoint.Enabled &&
 				(
 					nearest == null ||
 					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
+				) &&
+				(
+					navigator == null ||
+					navigator.pathBlockingLayers == 0 ||
+					!Physics.SphereCast (
+						position,
+						navigator.width / 2.0f,
+						waypoint.Position - position,
+						out hit,
+						(waypoint.Position - position).magnitude,
+						navigator.pathBlockingLayers
+					)
 				)
 			)
 			{
@@ -139,6 +152,12 @@ public class Navigation : MonoBehaviour
 		}
 		
 		return nearest;
+	}
+	
+	
+	public static Waypoint GetNearestNode (Vector3 position)
+	{
+		return GetNearestNode (position, null);
 	}
 	
 	
