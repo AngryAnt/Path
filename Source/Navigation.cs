@@ -211,13 +211,21 @@ public class Navigation : MonoBehaviour
 	
 	internal static void OnDisable (Waypoint waypoint)
 	{
-		Instance.HandleDisable (waypoint);
+		if (s_Instance == null)
+		{
+			return;
+		}
+		s_Instance.HandleDisable (waypoint);
 	}
 	
 	
 	internal static void OnDisable (Connection connection)
 	{
-		Instance.HandleDisable (connection);
+		if (s_Instance == null)
+		{
+			return;
+		}
+		s_Instance.HandleDisable (connection);
 	}
 	
 	
