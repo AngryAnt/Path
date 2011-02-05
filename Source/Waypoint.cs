@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 public class Waypoint : MonoBehaviour
 {
 	[SerializeField]
-	public List<Connection> m_Connections = new List<Connection> ();
+	private List<Connection> m_Connections = new List<Connection> ();
 	[SerializeField]
-	public float m_Radius = 1;
+	private float m_Radius = 1;
 	
 	
 	void Start ()
