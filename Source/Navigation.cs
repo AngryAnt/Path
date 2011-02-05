@@ -134,6 +134,7 @@ public class Navigation : MonoBehaviour
 					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
 				) &&
 				(
+					(waypoint.Position - position).magnitude < waypoint.Radius ||
 					navigator == null ||
 					navigator.pathBlockingLayers == 0 ||
 					!Physics.SphereCast (
