@@ -13,7 +13,7 @@ using System;
 "f0f15987")]
 
 
-public delegate void Handler ();
+internal delegate void Handler ();
 
 
 /// Path system root.
