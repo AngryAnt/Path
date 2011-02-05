@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+/// A connection between two Path nodes.
 [System.Serializable]
 public class Connection
 {
@@ -13,6 +15,7 @@ public class Connection
 	private bool m_Enabled = true;
 	
 	
+	/// Forms a new connection between two nodes. The connection lists itself with the from node.
 	public Connection (Waypoint from, Waypoint to)
 	{
 		Resources.Assert (from != null && to != null && from != to);
@@ -27,6 +30,7 @@ public class Connection
 	}
 	
 	
+	/// The origin of the connection.
 	public Waypoint From
 	{
 		get
@@ -36,6 +40,7 @@ public class Connection
 	}
 	
 	
+	/// The target of the connection.
 	public Waypoint To
 	{
 		get
@@ -45,6 +50,7 @@ public class Connection
 	}
 	
 	
+	/// The width of the connection. Connections narrower than the pathfinding Navigator will not be picked.
 	public float Width
 	{
 		get
@@ -58,6 +64,8 @@ public class Connection
 	}
 	
 	
+	/// The Connection Tag. This is used to weigh the Connection when pathfinding, assuming the pathfinding
+	/// Navigator has registered any weight handlers with the tag.
 	public string Tag
 	{
 		get
@@ -71,6 +79,8 @@ public class Connection
 	}
 	
 	
+	/// The Connection Enabled flag. If set to false, pathfinding will ignore the Connection and any already
+	/// found pathes going via this Connection will be invalidated.
 	public bool Enabled
 	{
 		get
@@ -88,6 +98,7 @@ public class Connection
 	}
 	
 	
+	/// The Connection cost. This is the pathfinding cost of the connection, before any tag-based weighting.
 	public float Cost
 	{
 		get
@@ -97,6 +108,7 @@ public class Connection
 	}
 	
 	
+	/// Overridden for easy debugging.
 	public override string ToString ()
 	{
 		return "Connection to " + To.ToString ();
