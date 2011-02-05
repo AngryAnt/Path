@@ -76,8 +76,20 @@ internal class Seeker
 				if (currentPath.Destination == endNode)
 				// Did find the path
 				{
-					OnPathResult (new Path (m_StartPosition, m_EndPosition, currentPath, m_Owner));
-					yield break;
+					Path path = new Path (m_StartPosition, m_EndPosition, currentPath, m_Owner);
+					if (path.Valid)
+					{
+						OnPathResult (path);
+						yield break;
+					}
+					else
+					{
+						#if DEBUG
+							Debug.Log ("Seeker: Path invalidated in middle of search. Re-seeking.");
+						#endif
+						yield return Seek ();
+						yield break;
+					}
 				}
 				
 				openSet.Remove (currentPath.LastSegment);

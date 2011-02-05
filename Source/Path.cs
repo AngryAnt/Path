@@ -95,6 +95,37 @@ public class Path
 	}
 	
 	
+	public bool Valid
+	{
+		get
+		{
+			if (StartNode == null && EndNode == null)
+			{
+				return true;
+			}
+			else if (StartNode == null || EndNode == null)
+			{
+				return false;
+			}
+			
+			if (!StartNode.Enabled)
+			{
+				return false;
+			}
+			
+			foreach (Connection connection in m_Segments)
+			{
+				if (!connection.Enabled || !connection.To.Enabled)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+	}
+	
+	
 	public void ArrivedAt (Waypoint waypoint)
 	{
 		for (int i = 0; i < m_Segments.Count; i++)
