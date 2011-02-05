@@ -79,7 +79,7 @@ public class Path
 		{
 			return m_SeekTime;
 		}
-		set
+		internal set
 		{
 			m_SeekTime = value;
 		}
