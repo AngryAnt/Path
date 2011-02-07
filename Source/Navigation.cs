@@ -5,6 +5,12 @@ using System.Collections.ObjectModel;
 using System;
 
 
+/// @mainpage
+/// Welcome to the API documentation for %Path 2.0. You will find an API overview on the Classes page, linked
+/// from the tab bar above here. For demo videos and non-API documentation, please check out
+/// http://angryant.com/path/documentation/.
+
+
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo ("Path.Editor, PublicKey=" +
 "0024000004800000940000000602000000240000525341310004000011000000155975c8857abb" + 
 "caf0be25ba0bb94c9298e2ad84cd98efb15e34b8763884597663c14e12b9276aa8e97b330421e8" + 
