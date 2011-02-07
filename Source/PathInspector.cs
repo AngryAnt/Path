@@ -460,18 +460,18 @@ public class PathInspector : Editor
 	
 	public static void VersionBar ()
 	{
-		//const float kPadding = 1.0f;
+		const float kPadding = 1.0f;
 		const float kSize = 20.0f;
 		GUILayout.BeginHorizontal (GUI.skin.GetStyle ("Box"), GUILayout.Height (kSize), GUILayout.ExpandHeight (false));
-			/*Rect logoRect = GUILayoutUtility.GetRect (kSize, kSize);
+			Rect logoRect = GUILayoutUtility.GetRect (kSize, kSize);
         	GUI.DrawTexture (new Rect (
 				logoRect.x + kPadding,
 				logoRect.y + kPadding,
 				logoRect.width - 2 * kPadding,
 				logoRect.height - 2 * kPadding),
-				Runtime.Resources.Logo);
-			GUILayout.Space (6.0f);*/
-			GUILayout.Label ("Path version " + Version);
+				Resources.Logo);
+			GUILayout.Space (6.0f);
+			GUILayout.Label ("Path version " + Resources.Version);
 			GUILayout.FlexibleSpace ();
 		GUILayout.EndHorizontal ();
 	}

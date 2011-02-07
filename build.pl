@@ -23,8 +23,8 @@ my $debugOptions = $optionRelease == 0 ? "-d:DEBUG" : "";
 $debugOptions .= $debugOptions == 1 ? " -d:DEBUG_SEEKER" : "";
 
 print ("Building runtime assembly..." . ($optionRelease == 0 ? " Debug build." : " Release.") . "\n");
-BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME -keyfile:Path.snk $debugOptions -r:$assemblyUnityEngine");
-BuildAssembly ("library", "Path.Editor.dll", "Source/PathInspector.cs", "-d:EDITOR $debugOptions -keyfile:Path.snk -r:Path.Runtime.dll,$assemblyUnityEngine,$assemblyUnityEditor");
+BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME -keyfile:Path.snk $debugOptions -r:$assemblyUnityEngine -resource:Resources/Logo.png -resource:Resources/LogoShadow.png -resource:Resources/PathLogo.png");
+BuildAssembly ("library", "Path.Editor.dll", "Source/PathInspector.cs Source/PathAbout.cs", "-d:EDITOR $debugOptions -keyfile:Path.snk -r:Path.Runtime.dll,$assemblyUnityEngine,$assemblyUnityEditor");
 
 print ("Generating documentation...\n");
 system ("/Applications/Doxygen.app/Contents/Resources/doxygen Doxyfile");
