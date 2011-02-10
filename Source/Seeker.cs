@@ -91,7 +91,7 @@ internal class Seeker
 				SeekerData currentPath = openSetValues[0];
 				
 				if (currentPath.Destination.Contains (m_EndPosition) ||
-					m_Owner.DirectPath (currentPath.Destination.Position, m_EndPosition))
+					(m_Owner.takeShortcuts && m_Owner.DirectPath (currentPath.Destination.Position, m_EndPosition)))
 				{
 					#if DEBUG_SEEKER
 						Debug.Log (string.Format ("Seeker: Found shortcut from {0} stopping here.", currentPath.Destination));

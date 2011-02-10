@@ -42,6 +42,10 @@ public class Navigator : MonoBehaviour
 	/// set to zero (or "none" in the inspector), no evaluation other than enabled / disabled will be performed when
 	/// doing closest node requests.
 	public LayerMask pathBlockingLayers = 0;
+	/// Toggles path optimization. If enabled, the Navigator will, when pathfinding, look for shortcuts. This involves
+	/// doing some physics sphere casts, so it will add to the total seek time. If you experience performance issues,
+	/// try disabling this option.
+	public bool takeShortcuts = true;
 	
 	
 	void Awake ()
