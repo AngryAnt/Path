@@ -63,6 +63,36 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
+	/// Can this Navigator travel the given segment unobstructed?
+	public bool DirectPath (Vector3 fromPosition, Vector3 toPosition)
+	{
+		RaycastHit hit;
+		if (
+			pathBlockingLayers == 0 ||
+			!Physics.SphereCast (
+				fromPosition,
+				width / 2.0f,
+				toPosition - fromPosition,
+				out hit,
+				(toPosition - fromPosition).magnitude,
+				pathBlockingLayers
+			)
+		)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	/// Can this Navigator travel to the given position unobstructed?
+	public bool DirectPath (Vector3 toPosition)
+	{
+		return DirectPath (transform.position, toPosition);
+	}
+	
+	
 	/// Force pathfinding to targetPosition. This is useful if the current path to targetPosition has for some reason
 	/// been invalidated. Calling ReSeek will recalculate it, even though targetPosition has not changed.
 	public void ReSeek ()

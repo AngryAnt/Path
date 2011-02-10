@@ -139,7 +139,6 @@ public class Navigation : MonoBehaviour
 		
 		foreach (Waypoint waypoint in Navigation.Waypoints)
 		{
-			RaycastHit hit;
 			if (
 				waypoint.Enabled &&
 				(
@@ -149,15 +148,7 @@ public class Navigation : MonoBehaviour
 				(
 					(waypoint.Position - position).magnitude < waypoint.Radius ||
 					navigator == null ||
-					navigator.pathBlockingLayers == 0 ||
-					!Physics.SphereCast (
-						position,
-						navigator.width / 2.0f,
-						waypoint.Position - position,
-						out hit,
-						(waypoint.Position - position).magnitude,
-						navigator.pathBlockingLayers
-					)
+					navigator.DirectPath (position, waypoint.Position)
 				)
 			)
 			{
