@@ -144,14 +144,14 @@ internal class Seeker
 	private void OnPathResult (Path path)
 	{
 		path.SeekTime = (float)(Time.realtimeSinceStartup - m_StartTime);
-		m_Owner.OnPathResult (m_EndPosition, path);
+		m_Owner.OnPathResult (this, path);
 		Navigation.WatchPath (path);
 	}
 	
 	
 	private void OnPathFailed ()
 	{
-		m_Owner.OnPathFailed (m_EndPosition);
+		m_Owner.OnPathFailed (this);
 	}
 	
 	

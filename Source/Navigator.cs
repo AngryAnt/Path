@@ -24,6 +24,7 @@ public class Navigator : MonoBehaviour
 {
 	private Vector3 m_PathfoundTargetPosition;
 	private Dictionary<string, List<WeightHandler>> m_WeightHandlers = new Dictionary<string, List<WeightHandler>> ();
+	private Seeker m_ActiveMainSeeker = null;
 	
 	
 	/// Directs Navigator pathfinding. When set to a new value, a pathfinding request will run. Resetting targetPosition
@@ -66,7 +67,8 @@ public class Navigator : MonoBehaviour
 	/// been invalidated. Calling ReSeek will recalculate it, even though targetPosition has not changed.
 	public void ReSeek ()
 	{
-		StartCoroutine (new Seeker (transform.position, targetPosition, this).Seek ());
+		m_ActiveMainSeeker = new Seeker (transform.position, targetPosition, this);
+		StartCoroutine (m_ActiveMainSeeker.Seek ());
 		m_PathfoundTargetPosition = targetPosition;
 	}
 	
@@ -110,11 +112,12 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
-	internal void OnPathFailed (Vector3 endPosition)
+	internal void OnPathFailed (Seeker seeker)
 	{
-		if (endPosition == targetPosition)
+		if (seeker == m_ActiveMainSeeker)
 		{
 			SendMessage ("OnTargetUnreachable", SendMessageOptions.DontRequireReceiver);
+			m_ActiveMainSeeker = null;
 			return;
 		}
 		
@@ -122,11 +125,12 @@ public class Navigator : MonoBehaviour
 	}
 	
 	
-	internal void OnPathResult (Vector3 endPosition, Path result)
+	internal void OnPathResult (Seeker seeker, Path result)
 	{
-		if (endPosition == targetPosition)
+		if (seeker == m_ActiveMainSeeker)
 		{
 			SendMessage ("OnNewPath", result, SendMessageOptions.DontRequireReceiver);
+			m_ActiveMainSeeker = null;
 			return;
 		}
 		
