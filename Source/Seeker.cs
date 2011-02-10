@@ -24,6 +24,10 @@ internal class Seeker
 	
 	public IEnumerator Seek ()
 	{
+		#if DEBUG_SEEKER
+			Debug.Log ("Seeker: Seek started.");
+		#endif
+		
 		m_StartTime = Time.realtimeSinceStartup;
 		
 		m_Seeking = true;
@@ -52,10 +56,10 @@ internal class Seeker
 		Dictionary<Connection, SeekerData> openSet = new Dictionary<Connection, SeekerData> ();
 		foreach (Connection connection in startNode.Connections)
 		{
-			if (!connection.Enabled)
+			if (!Valid (connection))
 			{
 				#if DEBUG_SEEKER
-					Debug.Log (string.Format ("Seeker: Skipping disabled connection {0}.", connection));
+					Debug.Log (string.Format ("Seeker: Skipping invalid connection {0}.", connection));
 				#endif
 				continue;
 			}
@@ -86,6 +90,15 @@ internal class Seeker
 				openSetValues.Sort ();
 				SeekerData currentPath = openSetValues[0];
 				
+				if (currentPath.Destination.Contains (m_EndPosition) ||
+					m_Owner.DirectPath (currentPath.Destination.Position, m_EndPosition))
+				{
+					#if DEBUG_SEEKER
+						Debug.Log (string.Format ("Seeker: Found shortcut from {0} stopping here.", currentPath.Destination));
+					#endif
+					endNode = currentPath.Destination;
+				}
+				
 				if (currentPath.Destination == endNode)
 				// Did find the path
 				{
@@ -110,18 +123,10 @@ internal class Seeker
 				
 				foreach (Connection connection in currentPath.Options)
 				{
-					if (!connection.Enabled)
+					if (!Valid (connection))
 					{
 						#if DEBUG_SEEKER
-							Debug.Log (string.Format ("Seeker: Skipping disabled connection {0} in path {1}.", connection, currentPath));
-						#endif
-						continue;
-					}
-					
-					if (connection.Width < m_Owner.width || connection.To.Radius * 2.0f < m_Owner.width)
-					{
-						#if DEBUG_SEEKER
-							Debug.Log (string.Format ("Seeker: Skipping too narrow connection {0} in path {1}.", connection, currentPath));
+							Debug.Log (string.Format ("Seeker: Skipping invalid connection {0} in path {1}.", connection, currentPath));
 						#endif
 						continue;
 					}
@@ -150,6 +155,22 @@ internal class Seeker
 				}
 			}
 		}
+	}
+	
+	
+	private bool Valid (Connection connection)
+	{
+		if (!connection.Enabled)
+		{
+			return false;
+		}
+		
+		if (connection.Width < m_Owner.width || connection.To.Radius * 2.0f < m_Owner.width)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 	
 	

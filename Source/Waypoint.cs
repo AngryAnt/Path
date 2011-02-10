@@ -145,6 +145,13 @@ public class Waypoint : MonoBehaviour
 	}
 	
 	
+	/// Is the given position inside the area covered by the Waypoint?
+	public bool Contains (Vector3 position)
+	{
+		return (Position - position).magnitude < Radius;
+	}
+	
+	
 	/// The Waypoint Tag. This is used to weigh the Waypoint when pathfinding, assuming the pathfinding
 	/// Navigator has registered any weight handlers with the tag.
 	public string Tag
