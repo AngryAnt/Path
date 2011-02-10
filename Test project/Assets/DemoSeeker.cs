@@ -58,6 +58,10 @@ public class DemoSeeker : MonoBehaviour
 		{
 			GetComponent<Navigator> ().targetPosition = m_Target.position;
 		}
+		if (GUILayout.Button ("ReSeek"))
+		{
+			GetComponent<Navigator> ().ReSeek ();
+		}
 	}
 	
 	

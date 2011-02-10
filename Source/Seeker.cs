@@ -10,6 +10,7 @@ internal class Seeker
 	private Vector3 m_StartPosition, m_EndPosition;
 	private int m_IterationCap;
 	private double m_StartTime;
+	private bool m_Seeking;
 	
 	
 	public Seeker (Vector3 startPosition, Vector3 endPosition, Navigator owner)
@@ -24,6 +25,8 @@ internal class Seeker
 	public IEnumerator Seek ()
 	{
 		m_StartTime = Time.realtimeSinceStartup;
+		
+		m_Seeking = true;
 		
 		Waypoint	startNode = Navigation.GetNearestNode (m_StartPosition, m_Owner),
 					endNode = Navigation.GetNearestNode (m_EndPosition, m_Owner);
@@ -55,7 +58,7 @@ internal class Seeker
 		
 		List<Connection> closedSet = new List<Connection> ();
 		
-		while (Application.isPlaying)
+		while (Application.isPlaying && m_Seeking)
 		{
 			yield return null;
 			for (int i = 0; i < m_IterationCap; i++)
@@ -141,8 +144,15 @@ internal class Seeker
 	}
 	
 	
+	public void Stop ()
+	{
+		m_Seeking = false;
+	}
+	
+	
 	private void OnPathResult (Path path)
 	{
+		m_Seeking = false;
 		path.SeekTime = (float)(Time.realtimeSinceStartup - m_StartTime);
 		m_Owner.OnPathResult (this, path);
 		Navigation.WatchPath (path);
@@ -151,6 +161,7 @@ internal class Seeker
 	
 	private void OnPathFailed ()
 	{
+		m_Seeking = false;
 		m_Owner.OnPathFailed (this);
 	}
 	

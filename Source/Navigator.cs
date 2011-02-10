@@ -67,6 +67,10 @@ public class Navigator : MonoBehaviour
 	/// been invalidated. Calling ReSeek will recalculate it, even though targetPosition has not changed.
 	public void ReSeek ()
 	{
+		if (m_ActiveMainSeeker != null)
+		{
+			m_ActiveMainSeeker.Stop ();
+		}
 		m_ActiveMainSeeker = new Seeker (transform.position, targetPosition, this);
 		StartCoroutine (m_ActiveMainSeeker.Seek ());
 		m_PathfoundTargetPosition = targetPosition;
