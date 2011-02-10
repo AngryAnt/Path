@@ -57,9 +57,17 @@ public class Navigator : MonoBehaviour
 	{
 		if (targetPosition != m_PathfoundTargetPosition)
 		{
-			StartCoroutine (new Seeker (transform.position, targetPosition, this).Seek ());
-			m_PathfoundTargetPosition = targetPosition;
+			ReSeek ();
 		}
+	}
+	
+	
+	/// Force pathfinding to targetPosition. This is useful if the current path to targetPosition has for some reason
+	/// been invalidated. Calling ReSeek will recalculate it, even though targetPosition has not changed.
+	public void ReSeek ()
+	{
+		StartCoroutine (new Seeker (transform.position, targetPosition, this).Seek ());
+		m_PathfoundTargetPosition = targetPosition;
 	}
 	
 	
