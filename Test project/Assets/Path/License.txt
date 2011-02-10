@@ -1,5 +1,5 @@
 Path - distribution of the 'Path' pathfinding system
-version 2.0f1, February, 2011
+version 2.0.0f2, February, 2011
 
 Copyright (C) AngryAnt, Emil Johansen
 
