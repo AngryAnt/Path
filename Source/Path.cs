@@ -37,6 +37,24 @@ public class Path
 		m_EndPosition = endPosition;
 		m_Segments = new List<Connection> (data.Path);
 		m_Owner = owner;
+		Optimize ();
+	}
+	
+	
+	private void Optimize ()
+	{
+		if (!m_Owner.takeShortcuts || m_Segments.Count < 2)
+		{
+			return;
+		}
+		
+		for (int i = m_Segments.Count - 2; i > 0; i--)
+		{
+			if (m_Segments[i].To.Contains (m_EndPosition) || m_Owner.DirectPath (m_Segments[i].To.Position, m_EndPosition))
+			{
+				m_Segments.RemoveRange (i, m_Segments.Count - i);
+			}
+		}
 	}
 	
 	
