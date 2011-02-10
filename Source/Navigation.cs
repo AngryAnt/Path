@@ -284,6 +284,13 @@ public class Navigation : MonoBehaviour
 			}
 			
 			Path path = (Path)m_CalculatedPathes[i].Target;
+			
+			if (path.Owner == null)
+			{
+				m_CalculatedPathes.RemoveAt (i);
+				continue;
+			}
+			
 			if (waypoint != null && path.Contains (waypoint))
 			{
 				path.Owner.gameObject.SendMessage ("OnPathInvalidated", path, SendMessageOptions.DontRequireReceiver);
