@@ -28,6 +28,15 @@ internal class Seeker
 		
 		m_Seeking = true;
 		
+		if (m_Owner.DirectPath (m_StartPosition, m_EndPosition))
+		{
+			#if DEBUG_SEEKER
+				Debug.Log ("Seeker: DirectPath. Early out.");
+			#endif
+			OnPathResult (new Path (m_StartPosition, m_EndPosition, m_Owner));
+			yield break;
+		}
+		
 		Waypoint	startNode = Navigation.GetNearestNode (m_StartPosition, m_Owner),
 					endNode = Navigation.GetNearestNode (m_EndPosition, m_Owner);
 		
@@ -36,7 +45,7 @@ internal class Seeker
 			#if DEBUG_SEEKER
 				Debug.Log (string.Format ("Seeker: Start and end node shared: {0}. Early out.", startNode));
 			#endif
-			OnPathResult (new Path (m_StartPosition, m_EndPosition, m_Owner));
+			OnPathResult (new Path (m_StartPosition, m_EndPosition, startNode, m_Owner));
 			yield break;
 		}
 		

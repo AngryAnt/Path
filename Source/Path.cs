@@ -11,12 +11,22 @@ public class Path
 	private List<Connection> m_Segments = new List<Connection> ();
 	private float m_SeekTime;
 	private Navigator m_Owner;
+	private Waypoint m_OnlyNode = null;
 	
 	
 	internal Path (Vector3 startPosition, Vector3 endPosition, Navigator owner)
 	{
 		m_StartPosition = startPosition;
 		m_EndPosition = endPosition;
+		m_Owner = owner;
+	}
+	
+	
+	internal Path (Vector3 startPosition, Vector3 endPosition, Waypoint onlyNode, Navigator owner)
+	{
+		m_StartPosition = startPosition;
+		m_EndPosition = endPosition;
+		m_OnlyNode = onlyNode;
 		m_Owner = owner;
 	}
 	
@@ -55,7 +65,7 @@ public class Path
 	{
 		get
 		{
-			return m_Segments.Count > 0 ? m_Segments[0].From : null;
+			return m_OnlyNode != null ? m_OnlyNode : (m_Segments.Count > 0 ? m_Segments[0].From : null);
 		}
 	}
 	
@@ -65,7 +75,7 @@ public class Path
 	{
 		get
 		{
-			return m_Segments.Count > 0 ? m_Segments[m_Segments.Count - 1].To : null;
+			return m_OnlyNode != null ? m_OnlyNode : (m_Segments.Count > 0 ? m_Segments[m_Segments.Count - 1].To : null);
 		}
 	}
 	
@@ -118,7 +128,7 @@ public class Path
 				return false;
 			}
 			
-			if (!StartNode.Enabled)
+			if (!StartNode.Enabled || !EndNode.Enabled)
 			{
 				return false;
 			}
@@ -139,6 +149,17 @@ public class Path
 	/// Signal that the Path user has now arrived at this node. Removes the node from the Path and any nodes leading up to it.
 	public void ArrivedAt (Waypoint waypoint)
 	{
+		if (waypoint == null)
+		{
+			return;
+		}
+		
+		if (m_OnlyNode != null && waypoint == m_OnlyNode)
+		{
+			m_OnlyNode = null;
+			return;
+		}
+		
 		for (int i = 0; i < m_Segments.Count; i++)
 		{
 			if (m_Segments[i].To == waypoint)
@@ -160,7 +181,12 @@ public class Path
 	/// Does this Path contain the specified Waypoint?
 	public bool Contains (Waypoint waypoint)
 	{
-		if (waypoint == StartNode)
+		if (waypoint == null)
+		{
+			return false;
+		}
+		
+		if (waypoint == m_OnlyNode || waypoint == StartNode || waypoint == EndNode)
 		{
 			return true;
 		}
@@ -180,6 +206,12 @@ public class Path
 	/// Handy for visualizing the Path via the Gizmos system.
 	public void OnDrawGizmos ()
 	{
+		if (StartNode == null)
+		{
+			Gizmos.DrawLine (StartPosition, EndPosition);
+			return;
+		}
+		
 		Gizmos.DrawLine (StartPosition, StartNode.Position);
 		foreach (Connection connection in Segments)
 		{
