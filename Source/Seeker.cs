@@ -32,7 +32,7 @@ internal class Seeker
 		
 		m_Seeking = true;
 		
-		if (m_Owner.DirectPath (m_StartPosition, m_EndPosition))
+		if (m_Owner.takeShortcuts && m_Owner.DirectPath (m_StartPosition, m_EndPosition))
 		{
 			#if DEBUG_SEEKER
 				Debug.Log ("Seeker: DirectPath. Early out.");
