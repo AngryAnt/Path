@@ -37,6 +37,15 @@ namespace PathRuntime
 		private int m_SeekerIterationCap = 10;
 		private Handler m_DrawGizmosHandler = null;
 		private List<WeakReference> m_CalculatedPathes = new List<WeakReference> ();
+		
+		
+		internal static bool Active
+		{
+			get
+			{
+				return s_Instance != null;
+			}
+		}
 
 
 		internal static Navigation Instance

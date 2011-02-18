@@ -25,7 +25,10 @@ namespace PathRuntime
 		
 		void OnEnable ()
 		{
-			Navigation.RegisterWaypoint (this);
+			if (Navigation.Active)
+			{
+				Navigation.RegisterWaypoint (this);
+			}
 		}
 
 
