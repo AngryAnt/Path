@@ -246,12 +246,20 @@ namespace PathEditor
 					if (GUILayout.Button ("<", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
 					{
 						s_WaypointDropDownIndex--;
+						if (s_WaypointDropDownIndex == 1)
+						{
+							s_WaypointDropDownIndex = 0;
+						}
 						SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
 					}
 					GUI.enabled = s_WaypointDropDownIndex + 1 < s_WaypointSelectionNames.Length;
 					if (GUILayout.Button (">", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
 					{
 						s_WaypointDropDownIndex++;
+						if (s_WaypointDropDownIndex == 1)
+						{
+							s_WaypointDropDownIndex = s_Waypoints.Count > 0 ? 2 : 0;
+						}
 						SelectWaypoint (s_Waypoints[s_WaypointDropDownIndex - 2]);
 					}
 					GUI.enabled = true;
@@ -310,7 +318,7 @@ namespace PathEditor
 
 					GUILayout.Space (kDropDownRightButtonOverlap);
 
-					GUI.enabled = s_ConnectionDropDownIndex - 1 > 1;
+					GUI.enabled = s_ConnectionDropDownIndex - 1 >= 0;
 					if (GUILayout.Button ("<", EditorStyles.miniButtonMid, GUILayout.Width (kPlusMinusWidth)))
 					{
 						s_ConnectionDropDownIndex--;
