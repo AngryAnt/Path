@@ -70,15 +70,21 @@ public class Navigator : MonoBehaviour
 	/// Can this Navigator travel the given segment unobstructed?
 	public bool DirectPath (Vector3 fromPosition, Vector3 toPosition)
 	{
+		if (pathBlockingLayers == 0)
+		{
+			return true;
+		}
+		
+		Vector3 target = toPosition - fromPosition;
 		RaycastHit hit;
+		
 		if (
-			pathBlockingLayers == 0 ||
 			!Physics.SphereCast (
 				fromPosition,
 				width / 2.0f,
-				toPosition - fromPosition,
+				target,
 				out hit,
-				(toPosition - fromPosition).magnitude,
+				target.magnitude,
 				pathBlockingLayers
 			)
 		)

@@ -20,7 +20,7 @@ GetOptions (
 );
 
 my $debugOptions = $optionRelease == 0 ? "-d:DEBUG" : "";
-$debugOptions .= $debugOptions == 1 ? " -d:DEBUG_SEEKER" : "";
+$debugOptions .= $debugSeeker == 1 ? " -d:DEBUG_SEEKER" : "";
 
 print ("Building runtime assembly..." . ($optionRelease == 0 ? " Debug build." : " Release.") . ($debugSeeker == 1 ? " Seeker debugging enabled." : "") . "\n");
 BuildAssembly ("library", "Path.Runtime.dll", "Source/*.cs", "-d:RUNTIME -keyfile:Path.snk $debugOptions -r:$assemblyUnityEngine -resource:Resources/Logo.png -resource:Resources/LogoShadow.png -resource:Resources/PathLogo.png");

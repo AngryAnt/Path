@@ -45,14 +45,47 @@ public class Path
 	{
 		if (!m_Owner.takeShortcuts || m_Segments.Count < 2)
 		{
+			#if DEBUG_SEEKER
+				Debug.Log ("Path: Not optimizing. Too few segments or no shortcut taking.");
+			#endif
 			return;
 		}
 		
-		for (int i = m_Segments.Count - 2; i > 0; i--)
+		#if DEBUG_SEEKER
+			Debug.Log ("Path: Optimizing start.");
+		#endif
+		for (int i = 1; i < m_Segments.Count - 1;)
+		{
+			if (m_Segments[i].From.Contains (m_StartPosition) || m_Owner.DirectPath (m_StartPosition, m_Segments[i].From.Position))
+			{
+				#if DEBUG_SEEKER
+					Debug.Log ("Path: Cut to starting at " + m_Segments[i].From + ".");
+				#endif
+				m_Segments.RemoveRange (0, i);
+				i = 1;
+			}
+			else
+			{
+				i++;
+			}
+		}
+		
+		#if DEBUG_SEEKER
+			Debug.Log ("Path: Optimizing end.");
+		#endif
+		for (int i = m_Segments.Count - 1; i > 0;)
 		{
 			if (m_Segments[i].To.Contains (m_EndPosition) || m_Owner.DirectPath (m_Segments[i].To.Position, m_EndPosition))
 			{
+				#if DEBUG_SEEKER
+					Debug.Log ("Path: Cut to ending at " + m_Segments[i].To + ".");
+				#endif
 				m_Segments.RemoveRange (i, m_Segments.Count - i);
+				i = m_Segments.Count - 1;
+			}
+			else
+			{
+				i--;
 			}
 		}
 	}
