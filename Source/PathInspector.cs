@@ -333,6 +333,7 @@ namespace PathEditor
 
 				waypoint.Connections[s_ConnectionDropDownIndex].Enabled = EditorGUILayout.Toggle ("Enabled", waypoint.Connections[s_ConnectionDropDownIndex].Enabled);
 				waypoint.Connections[s_ConnectionDropDownIndex].Width = EditorGUILayout.FloatField ("Width", waypoint.Connections[s_ConnectionDropDownIndex].Width);
+				waypoint.Connections[s_ConnectionDropDownIndex].Weight = EditorGUILayout.FloatField ("Weight", waypoint.Connections[s_ConnectionDropDownIndex].Weight);
 				waypoint.Connections[s_ConnectionDropDownIndex].Tag = EditorGUILayout.TagField ("Tag", waypoint.Connections[s_ConnectionDropDownIndex].Tag);
 			}
 			else

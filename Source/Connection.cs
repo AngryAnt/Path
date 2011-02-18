@@ -12,6 +12,8 @@ namespace PathRuntime
 		[SerializeField]
 		private float m_Width = 1.0f;
 		[SerializeField]
+		private float m_Weight = 1.0f;
+		[SerializeField]
 		private string m_Tag = "Untagged";
 		[SerializeField]
 		private bool m_Enabled = true;
@@ -62,6 +64,21 @@ namespace PathRuntime
 			set
 			{
 				m_Width = value > 0 ? value : m_Width;
+			}
+		}
+		
+		
+		/// The weight of the connection. A factor which increases or decreases the cost of the connection when
+		/// pathfinding. Default is 1.
+		public float Weight
+		{
+			get
+			{
+				return m_Weight;
+			}
+			set
+			{
+				m_Weight = value != 0 ? value : m_Weight;
 			}
 		}
 

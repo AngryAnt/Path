@@ -193,7 +193,7 @@ namespace PathRuntime
 
 		private float GScore (Connection connection)
 		{
-			float score = connection.Cost;
+			float score = connection.Cost * connection.Weight;
 
 			foreach (WeightHandler handler in m_Owner.WeightHandlers (connection.Tag))
 			{
