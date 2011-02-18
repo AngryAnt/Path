@@ -6,6 +6,10 @@ using System.Collections.ObjectModel;
 
 namespace PathRuntime
 {
+	/// Used in Waypoint.Create to specify whether a Waypoint should be visible or hidden in the inspector.
+	public enum HierarchyVisibility { Hidden, Visible };
+	
+	
 	/// A Path waypoint. Each waypoint is defined by a Position, a Radius and optinally a list of Connections.
 	[ExecuteInEditMode]
 	[AddComponentMenu ("Path/Waypoint")]
@@ -15,6 +19,26 @@ namespace PathRuntime
 		private List<Connection> m_Connections = new List<Connection> ();
 		[SerializeField]
 		private float m_Radius = 1;
+		
+		
+		/// Creates a new waypoint. Since a Waypoint is a MonoBehaviour, this also creates a GameObject for the waypoint.
+		public static Waypoint Create (Vector3 position, HierarchyVisibility visibility = HierarchyVisibility.Hidden, string name = null, string tag = null)
+		{
+			Waypoint point = new GameObject (name == null ? "Waypoint" : name).AddComponent<Waypoint> ();
+			point.Position = position;
+			
+			if (visibility == HierarchyVisibility.Hidden)
+			{
+				point.gameObject.hideFlags = HideFlags.HideInHierarchy;
+			}
+			
+			if (!string.IsNullOrEmpty (tag))
+			{
+				point.Tag = tag;
+			}
+			
+			return point;
+		}
 
 
 		void Start ()

@@ -386,11 +386,8 @@ namespace PathEditor
 			int index = 0;
 
 			while (GameObject.Find (name + ++index) != null);
-
-			GameObject go = new GameObject (name + index);
-			go.hideFlags = HideFlags.HideInHierarchy;
-
-			return go.AddComponent<Waypoint> ();
+			
+			return Waypoint.Create (Vector3.zero, HierarchyVisibility.Hidden, name + index);
 		}
 
 
