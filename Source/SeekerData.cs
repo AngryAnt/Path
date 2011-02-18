@@ -4,121 +4,125 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-internal class SeekerData : System.IComparable
+
+namespace PathRuntime
 {
-	private List<Connection> m_Path = new List<Connection> ();
-	private float m_GScore, m_HScore;
-	
-	
-	public SeekerData (Connection connection, float gScore, float hScore)
+	internal class SeekerData : System.IComparable
 	{
-		m_Path.Add (connection);
-		m_GScore = gScore;
-		m_HScore = hScore;
-	}
-	
-	
-	public SeekerData (SeekerData original, Connection connection, float gScore, float hScore)
-	{
-		m_Path = new List<Connection> (original.Path);
-		m_Path.Add (connection);
-		m_GScore = original.GScore + gScore;
-		m_HScore = original.HScore + hScore;
-	}
-	
-	
-	public IList<Connection> Path
-	{
-		get
+		private List<Connection> m_Path = new List<Connection> ();
+		private float m_GScore, m_HScore;
+
+
+		public SeekerData (Connection connection, float gScore, float hScore)
 		{
-			return m_Path.AsReadOnly ();
+			m_Path.Add (connection);
+			m_GScore = gScore;
+			m_HScore = hScore;
 		}
-	}
-	
-	
-	public float GScore
-	{
-		get
+
+
+		public SeekerData (SeekerData original, Connection connection, float gScore, float hScore)
 		{
-			return m_GScore;
+			m_Path = new List<Connection> (original.Path);
+			m_Path.Add (connection);
+			m_GScore = original.GScore + gScore;
+			m_HScore = original.HScore + hScore;
 		}
-	}
-	
-	
-	public float HScore
-	{
-		get
+
+
+		public IList<Connection> Path
 		{
-			return m_HScore;
-		}
-	}
-	
-	
-	public float FScore
-	{
-		get
-		{
-			return m_GScore + m_HScore;
-		}
-	}
-	
-	
-	public Connection LastSegment
-	{
-		get
-		{
-			return m_Path[m_Path.Count - 1];
-		}
-	}
-	
-	
-	public Waypoint Destination
-	{
-		get
-		{
-			return LastSegment.To;
-		}
-	}
-	
-	
-	public List<Connection> Options
-	{
-		get
-		{
-			List<Connection> connections = new List<Connection> (Destination.Connections);
-			
-			if (Path.Count > 1)
+			get
 			{
-				connections.RemoveAll (x => x.To == LastSegment.From);
+				return m_Path.AsReadOnly ();
 			}
-			
-			return connections;
 		}
-	}
-	
-	
-	public int CompareTo (object other)
-	{
-		SeekerData seeker = other as SeekerData;
-		
-		if (seeker == null)
+
+
+		public float GScore
 		{
-			throw new System.ApplicationException ("Invalid SeekerData provided for comparison");
+			get
+			{
+				return m_GScore;
+			}
 		}
-		
-		return FScore.CompareTo (seeker.FScore);
-	}
-	
-	
-	public override string ToString ()
-	{
-		string value = "Path from " + Path[0].From;
-		
-		foreach (Connection connection in Path)
+
+
+		public float HScore
 		{
-			value += " to " + connection.To;
+			get
+			{
+				return m_HScore;
+			}
 		}
-		
-		return value + ".";
+
+
+		public float FScore
+		{
+			get
+			{
+				return m_GScore + m_HScore;
+			}
+		}
+
+
+		public Connection LastSegment
+		{
+			get
+			{
+				return m_Path[m_Path.Count - 1];
+			}
+		}
+
+
+		public Waypoint Destination
+		{
+			get
+			{
+				return LastSegment.To;
+			}
+		}
+
+
+		public List<Connection> Options
+		{
+			get
+			{
+				List<Connection> connections = new List<Connection> (Destination.Connections);
+
+				if (Path.Count > 1)
+				{
+					connections.RemoveAll (x => x.To == LastSegment.From);
+				}
+
+				return connections;
+			}
+		}
+
+
+		public int CompareTo (object other)
+		{
+			SeekerData seeker = other as SeekerData;
+
+			if (seeker == null)
+			{
+				throw new System.ApplicationException ("Invalid SeekerData provided for comparison");
+			}
+
+			return FScore.CompareTo (seeker.FScore);
+		}
+
+
+		public override string ToString ()
+		{
+			string value = "Path from " + Path[0].From;
+
+			foreach (Connection connection in Path)
+			{
+				value += " to " + connection.To;
+			}
+
+			return value + ".";
+		}
 	}
 }

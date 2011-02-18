@@ -4,172 +4,175 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
-/// A Path waypoint. Each waypoint is defined by a Position, a Radius and optinally a list of Connections.
-[ExecuteInEditMode]
-public class Waypoint : MonoBehaviour
+namespace PathRuntime
 {
-	[SerializeField]
-	private List<Connection> m_Connections = new List<Connection> ();
-	[SerializeField]
-	private float m_Radius = 1;
-	
-	
-	void Start ()
+	/// A Path waypoint. Each waypoint is defined by a Position, a Radius and optinally a list of Connections.
+	[ExecuteInEditMode]
+	public class Waypoint : MonoBehaviour
 	{
-		Navigation.RegisterWaypoint (this);
-	}
-	
-	
-	void OnDisable ()
-	{
-		Navigation.OnDisable (this);
-	}
-	
-	
-	void OnDestroy ()
-	{
-		Navigation.UnregisterWaypoint (this);
-	}
-	
-	
-	internal Connection AddConnection (Connection connection)
-	{
-		Resources.Assert (connection.From == this);
-		
-		if (!m_Connections.Contains (connection))
+		[SerializeField]
+		private List<Connection> m_Connections = new List<Connection> ();
+		[SerializeField]
+		private float m_Radius = 1;
+
+
+		void Start ()
 		{
-			m_Connections.Add (connection);
+			Navigation.RegisterWaypoint (this);
 		}
-		
-		return connection;
-	}
-	
-	
-	/// Removes a given connection.
-	public void RemoveConnection (Connection connection)
-	{
-		m_Connections.Remove (connection);
-		Navigation.OnDisable (connection);
-	}
-	
-	
-	/// Removes any connection to the specified node.
-	public void RemoveConnection (Waypoint waypoint)
-	{
-		for (int i = 0; i < m_Connections.Count;)
+
+
+		void OnDisable ()
 		{
-			if (m_Connections[i].To == waypoint)
-			{
-				RemoveConnection (m_Connections[i]);
-			}
-			else
-			{
-				i++;
-			}
+			Navigation.OnDisable (this);
 		}
-	}
-	
-	
-	/// Returns true of this Waypoint connects to the given node.
-	public bool ConnectsTo (Waypoint waypoint)
-	{
-		foreach (Connection connection in m_Connections)
+
+
+		void OnDestroy ()
 		{
-			if (connection.To == waypoint)
+			Navigation.UnregisterWaypoint (this);
+		}
+
+
+		internal Connection AddConnection (Connection connection)
+		{
+			Resources.Assert (connection.From == this);
+
+			if (!m_Connections.Contains (connection))
 			{
-				return true;
+				m_Connections.Add (connection);
+			}
+
+			return connection;
+		}
+
+
+		/// Removes a given connection.
+		public void RemoveConnection (Connection connection)
+		{
+			m_Connections.Remove (connection);
+			Navigation.OnDisable (connection);
+		}
+
+
+		/// Removes any connection to the specified node.
+		public void RemoveConnection (Waypoint waypoint)
+		{
+			for (int i = 0; i < m_Connections.Count;)
+			{
+				if (m_Connections[i].To == waypoint)
+				{
+					RemoveConnection (m_Connections[i]);
+				}
+				else
+				{
+					i++;
+				}
 			}
 		}
-		
-		return false;
-	}
-	
-	
-	/// Removes all outgoing connections from the node.
-	public void Disconnect ()
-	{
-		m_Connections = new List<Connection> ();
-	}
-	
-	
-	/// The list of connections going out from this Waypoint.
-	public ReadOnlyCollection<Connection> Connections
-	{
-		get
+
+
+		/// Returns true of this Waypoint connects to the given node.
+		public bool ConnectsTo (Waypoint waypoint)
 		{
-			return m_Connections.AsReadOnly ();
+			foreach (Connection connection in m_Connections)
+			{
+				if (connection.To == waypoint)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
-	}
-	
-	
-	/// The Waypoint Enabled flag. If set to false, pathfinding will ignore the Waypoint and any already
-	/// found pathes going through this Waypoint will be invalidated.
-	public bool Enabled
-	{
-		get
+
+
+		/// Removes all outgoing connections from the node.
+		public void Disconnect ()
 		{
-			return enabled;
+			m_Connections = new List<Connection> ();
 		}
-		set
+
+
+		/// The list of connections going out from this Waypoint.
+		public ReadOnlyCollection<Connection> Connections
 		{
-			enabled = value;
+			get
+			{
+				return m_Connections.AsReadOnly ();
+			}
 		}
-	}
-	
-	
-	/// The Waypoint position.
-	public Vector3 Position
-	{
-		get
+
+
+		/// The Waypoint Enabled flag. If set to false, pathfinding will ignore the Waypoint and any already
+		/// found pathes going through this Waypoint will be invalidated.
+		public bool Enabled
 		{
-			return transform.position;
+			get
+			{
+				return enabled;
+			}
+			set
+			{
+				enabled = value;
+			}
 		}
-		set
+
+
+		/// The Waypoint position.
+		public Vector3 Position
 		{
-			transform.position = value;
+			get
+			{
+				return transform.position;
+			}
+			set
+			{
+				transform.position = value;
+			}
 		}
-	}
-	
-	
-	/// The Waypoint radius. Waypoints narrower than the pathfinding Navigator will not be picked.
-	public float Radius
-	{
-		get
+
+
+		/// The Waypoint radius. Waypoints narrower than the pathfinding Navigator will not be picked.
+		public float Radius
 		{
-			return m_Radius;
+			get
+			{
+				return m_Radius;
+			}
+			set
+			{
+				m_Radius = value > 0 ? value : m_Radius;
+			}
 		}
-		set
+
+
+		/// Is the given position inside the area covered by the Waypoint?
+		public bool Contains (Vector3 position)
 		{
-			m_Radius = value > 0 ? value : m_Radius;
+			return (Position - position).magnitude < Radius;
 		}
-	}
-	
-	
-	/// Is the given position inside the area covered by the Waypoint?
-	public bool Contains (Vector3 position)
-	{
-		return (Position - position).magnitude < Radius;
-	}
-	
-	
-	/// The Waypoint Tag. This is used to weigh the Waypoint when pathfinding, assuming the pathfinding
-	/// Navigator has registered any weight handlers with the tag.
-	public string Tag
-	{
-		get
+
+
+		/// The Waypoint Tag. This is used to weigh the Waypoint when pathfinding, assuming the pathfinding
+		/// Navigator has registered any weight handlers with the tag.
+		public string Tag
 		{
-			return gameObject.tag;
+			get
+			{
+				return gameObject.tag;
+			}
+			set
+			{
+				gameObject.tag = value;
+			}
 		}
-		set
+
+
+		/// Overridden for easy debugging.
+		public override string ToString ()
 		{
-			gameObject.tag = value;
+			return gameObject.name;
 		}
-	}
-	
-	
-	/// Overridden for easy debugging.
-	public override string ToString ()
-	{
-		return gameObject.name;
 	}
 }

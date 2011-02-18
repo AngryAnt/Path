@@ -1,4 +1,5 @@
 using UnityEditor;
+using PathEditor;
 
 public class PathAboutWindow : PathAbout
 {

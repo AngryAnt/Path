@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using PathRuntime;
 
 [RequireComponent (typeof (Navigator))]
 public class DemoSeeker : MonoBehaviour
