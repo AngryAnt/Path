@@ -131,24 +131,37 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
-	/// Returns nearest node to a position for a given Navigator. If the Navigator has non-zero pathBlockingLayers
-	/// specified, each potential node will be checked for accessibility with a sphere cast.
-	public static Waypoint GetNearestNode (Vector3 position, Navigator navigator)
+	/// Returns nearest node to a position for a given Navigator, headed in a given direction. If the Navigator
+	/// has non-zero pathBlockingLayers specified, each potential node will be checked for accessibility with
+	/// a sphere cast.
+	public static Waypoint GetNearestNode (Vector3 position, Vector3 direction, Navigator navigator)
 	{
 		Waypoint nearest = null;
 		
 		foreach (Waypoint waypoint in Navigation.Waypoints)
 		{
+			if (!waypoint.Enabled)
+			{
+				continue;
+			}
+			
+			if (nearest == null)
+			{
+				nearest = waypoint;
+				continue;
+			}
+			
+			if ()
+			Vector3 nearestDirection = nearest.Position - position,
+					currentDirection = waypoint.Position + position;
+			
 			if (
-				waypoint.Enabled &&
-				(
-					nearest == null ||
-					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude
-				) &&
-				(
-					(waypoint.Position - position).magnitude < waypoint.Radius ||
-					navigator == null ||
-					navigator.DirectPath (position, waypoint.Position)
+					(nearest.Position - position).sqrMagnitude > (waypoint.Position - position).sqrMagnitude &&
+					(
+						(waypoint.Position - position).magnitude < waypoint.Radius ||
+						navigator == null ||
+						navigator.DirectPath (position, waypoint.Position)
+					)
 				)
 			)
 			{
@@ -160,10 +173,18 @@ public class Navigation : MonoBehaviour
 	}
 	
 	
+	/// Returns nearest node to a position for a given Navigator. If the Navigator has non-zero pathBlockingLayers
+	/// specified, each potential node will be checked for accessibility with a sphere cast.
+	public static Waypoint GetNearestNode (Vector3 position, Navigator navigator)
+	{
+		return GetNearestNode (position, Vector3.zero, null);
+	}
+	
+	
 	/// Returns nearest node to a position.
 	public static Waypoint GetNearestNode (Vector3 position)
 	{
-		return GetNearestNode (position, null);
+		return GetNearestNode (position, Vector3.zero, null);
 	}
 	
 	
