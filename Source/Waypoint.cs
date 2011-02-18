@@ -8,6 +8,7 @@ namespace PathRuntime
 {
 	/// A Path waypoint. Each waypoint is defined by a Position, a Radius and optinally a list of Connections.
 	[ExecuteInEditMode]
+	[AddComponentMenu ("Path/Waypoint")]
 	public class Waypoint : MonoBehaviour
 	{
 		[SerializeField]
