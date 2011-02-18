@@ -231,6 +231,16 @@ namespace PathRuntime
 				}
 			}
 		}
+		
+		
+		/// Disconnect all known waypoints.
+		public static void Disconnect ()
+		{
+			foreach (Waypoint waypoint in Instance.m_Waypoints)
+			{
+				waypoint.Disconnect ();
+			}
+		}
 
 
 		internal static Waypoint RegisterWaypoint (Waypoint waypoint)

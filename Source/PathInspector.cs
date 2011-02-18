@@ -216,9 +216,9 @@ namespace PathEditor
 
 			if (GUILayout.Button ("Disconnect all", EditorStyles.miniButton))
 			{
-				foreach (Waypoint waypoint in s_Waypoints)
+				Navigation.Disconnect ();
+				foreach (Waypoint waypoint in Navigation.Waypoints)
 				{
-					waypoint.Disconnect ();
 					EditorUtility.SetDirty (waypoint);
 				}
 				UpdateLists (target);
