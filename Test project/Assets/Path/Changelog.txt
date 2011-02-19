@@ -1,0 +1,14 @@
+Changelog:
+
+2.0.1b1:
+ - Moved Path into the namespaces PathEditor and PathRuntime.
+ - Improved path smoothing.
+ - Added Waypoint to the Component/Path menu as well.
+ - Added Navigation.Disconnect.
+ - Added per-connection weight - for manual weight assigning in addition to tag-based weighting.
+ - Added Waypoint.Create convenience method.
+ - Fixed pathfinder taking shortcut directly to target even if shortcut taking was disabled.
+ - Fixed occasional exception throwing in inspector GUI.
+
+2.0.0f2:
+ - Magic happened, Path 2 was born.
