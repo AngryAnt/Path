@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
+internal delegate void WaypointGizmosHandler (PathRuntime.Waypoint point);
+
+
 namespace PathRuntime
 {
 	/// Used in Waypoint.Create to specify whether a Waypoint should be visible or hidden in the inspector.
@@ -15,6 +18,7 @@ namespace PathRuntime
 	[AddComponentMenu ("Path/Waypoint")]
 	public class Waypoint : MonoBehaviour
 	{
+		private WaypointGizmosHandler m_DrawGizmosHandler = null;
 		[SerializeField]
 		private List<Connection> m_Connections = new List<Connection> ();
 		[SerializeField]
@@ -207,6 +211,30 @@ namespace PathRuntime
 		public override string ToString ()
 		{
 			return gameObject.name;
+		}
+		
+		
+		internal WaypointGizmosHandler DrawGizmosHandler
+		{
+			get
+			{
+				return m_DrawGizmosHandler;
+			}
+			set
+			{
+				Debug.Log ("Handler set");
+				m_DrawGizmosHandler = value;
+			}
+		}
+		
+		
+		void OnDrawGizmos ()
+		{
+			Debug.Log ("Draw gizmos");
+			if (m_DrawGizmosHandler != null)
+			{
+				m_DrawGizmosHandler (this);
+			}
 		}
 	}
 }

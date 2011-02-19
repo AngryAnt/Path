@@ -76,6 +76,11 @@ namespace PathEditor
 				s_WaypointDropDownIndex = 0;
 				s_ConnectionDropDownIndex = 0;
 			}
+			
+			foreach (Waypoint waypoint in Navigation.Waypoints)
+			{
+				waypoint.DrawGizmosHandler = OnRenderWaypointGizmos;
+			}
 		}
 
 
@@ -406,11 +411,6 @@ namespace PathEditor
 				return;
 			}
 
-			foreach (Waypoint waypoint in Navigation.Waypoints)
-			{
-				OnRenderWaypointGizmos (waypoint);
-			}
-
 			if (SelectedWaypoint != null)
 			{
 				OnRenderWaypointGizmos (SelectedWaypoint);
@@ -420,6 +420,13 @@ namespace PathEditor
 
 		public static void OnRenderWaypointGizmos (Waypoint waypoint)
 		{
+			Debug.Log ("Waypoint gizmos for " + waypoint);
+			
+			if (!ShowGizmos || SelectedWaypoint == waypoint)
+			{
+				return;
+			}
+			
 			Gizmos.color = SelectedWaypoint == waypoint ? Color.white : WaypointColour;
 
 			Gizmos.DrawWireSphere (waypoint.Position, waypoint.Radius);

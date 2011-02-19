@@ -19,7 +19,7 @@ using System;
 "f0f15987")]
 
 
-internal delegate void Handler ();
+internal delegate void NavigationGizmosHandler ();
 
 
 namespace PathRuntime
@@ -35,7 +35,7 @@ namespace PathRuntime
 		private List<Waypoint> m_Waypoints = new List<Waypoint> ();
 		[SerializeField]
 		private int m_SeekerIterationCap = 10;
-		private Handler m_DrawGizmosHandler = null;
+		private NavigationGizmosHandler m_DrawGizmosHandler = null;
 		private List<WeakReference> m_CalculatedPathes = new List<WeakReference> ();
 		
 		
@@ -101,7 +101,7 @@ namespace PathRuntime
 		}
 
 
-		internal static Handler DrawGizmosHandler
+		internal static NavigationGizmosHandler DrawGizmosHandler
 		{
 			get
 			{
