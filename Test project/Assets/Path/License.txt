@@ -1,47 +1,22 @@
 Path - distribution of the 'Path' pathfinding system
-version 2.0.1b1, February, 2011
+version 2.0.1b1, April, 2011
 
-Copyright (C) AngryAnt, Emil Johansen
+Copyright (C) 2011 by AngryAnt, Emil Johansen
 
-This software is provided 'as-is', without any express or implied
-warranty.  In no event will the author be held liable for any damages
-arising from the use of this software.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Permission is granted to anyone to use this software for any purpose
-and redistribute it freely, subject to the following restrictions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-1. The origin of this software must not be misrepresented; you must not
-   claim that you wrote the original software. If you use this software
-   in a product, an acknowledgment is required as stated in point 2 of
-   this notice.
-2. If you use this software in a product, you are required to acknowledge
-   its original creator by displaying at least one unaltered version of the
-   provided software logo images in your product splash screen for no less
-   than four full seconds. If your product has an "About" or credits view,
-   this same logo image must also be displayed there.
-3. The original software author may, in any customer reference list or in
-   any press release, use the name of products, individuals and companies
-   using this software.
-4. This Agreement will be governed by the laws of the State of Denmark as
-   they are applied to agreements between Denmark residents entered into
-   and to be performed entirely within Denmark. The United Nations
-   Convention on Contracts for the International Sale of Goods is
-   specifically disclaimed.
-5. Whether you are licensing the Software as an individual or on behalf of
-   an entity, you may not: (a) reverse engineer, decompile, or disassemble
-   the Software or attempt to discover the source code; (b) modify the
-   Software runtime in whole or in part without the express written consent
-   of the original software creator; (c) remove any proprietary notices or
-   labels on the Software; (d) resell, lease, rent, transfer, sublicense,
-   or otherwise transfer rights to the Software.
-6. You agree that this is the entire agreement between you and the original
-   software creator, which supersedes any prior agreement, whether written
-   or oral, and all other communications between the original software
-   creator and you relating to the subject matter of this Agreement.
-7. This notice and the provided logo image files may not be removed or
-   altered from any source distribution.
-
-Any of these requirement may be waived for an additional fee. Contact the
-original software author for details.
-
-AngryAnt, Emil Johansen - emil@eej.dk
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
