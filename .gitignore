@@ -1,4 +1,6 @@
 Previous versions
+bin/
+*.swp
 Test project/Library
 Test project/Temp
 Test project/Assets/UnitySteer
