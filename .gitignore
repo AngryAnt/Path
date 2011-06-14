@@ -1,6 +1,8 @@
 Previous versions
+Solution/*.userprefs
 bin/
 *.swp
+*.pidb
 Test project/Library
 Test project/Temp
 Test project/Assets/UnitySteer
