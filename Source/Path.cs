@@ -302,6 +302,11 @@ namespace PathRuntime
 		/// Overridden for easy debugging.
 		public override string ToString ()
 		{
+			if (Segments == null || Segments.Count < 1)
+			{
+				return "Empty path";
+			}
+
 			string value = "Path from " + StartNode;
 
 			foreach (Connection connection in Segments)
