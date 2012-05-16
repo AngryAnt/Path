@@ -62,6 +62,7 @@ namespace PathRuntime
 			m_Seeking = true;
 
 			if (m_Owner.takeShortcuts && m_Owner.DirectPath (m_StartPosition, m_EndPosition))
+			// See if we can just go directly from start to end and early-out if so
 			{
 				#if DEBUG_SEEKER
 					Debug.Log ("Seeker: DirectPath. Early out.");
@@ -73,7 +74,18 @@ namespace PathRuntime
 			Waypoint	startNode = Navigation.GetNearestNode (m_StartPosition, m_Owner),
 						endNode = Navigation.GetNearestNode (m_EndPosition, m_Owner);
 
+			if (startNode == null || endNode == null)
+			// Unable to find either a start or an end node
+			{
+				#if DEBUG_SEEKER
+					Debug.Log (string.Format ("Seeker: No start or end node found while trying to pathfind from {0} to {1}. Failure.", m_StartPosition, m_EndPosition));
+				#endif
+				OnPathFailed ();
+				yield break;
+			}
+
 			if (startNode == endNode)
+			// If start and end node is the same, we can early out as well
 			{
 				#if DEBUG_SEEKER
 					Debug.Log (string.Format ("Seeker: Start and end node shared: {0}. Early out.", startNode));
