@@ -113,12 +113,14 @@ namespace PathRuntime
 			List<Connection> closedSet = new List<Connection> ();
 
 			while (Application.isPlaying && m_Seeking)
+			// Continue seeking until the end of time or we're instructed to stop
 			{
 				yield return null;
 				for (int i = 0; i < m_IterationCap; i++)
+				// Run the maximum specified number of iterations before yielding the frame again
 				{
 					if (openSet.Count == 0)
-					// Unable to find path
+					// No more avenues to investigate. Unable to find path.
 					{
 						#if DEBUG_SEEKER
 							Debug.Log (string.Format ("Seeker: Empty open set while trying to pathfind from {0} to {1}. Failure.", startNode, endNode));
@@ -127,12 +129,13 @@ namespace PathRuntime
 						yield break;
 					}
 
+					// Pick the cheapest option for investigation
 					List<SeekerData> openSetValues = new List<SeekerData> (openSet.Values);
 					openSetValues.Sort ();
 					SeekerData currentPath = openSetValues[0];
 
 					if (currentPath.Destination == endNode)
-					// Did find the path
+					// Did find the path. If still valid, return it - otherwise start over
 					{
 						Path path = new Path (m_StartPosition, m_EndPosition, currentPath, m_Owner);
 						if (path.Valid)
@@ -150,12 +153,15 @@ namespace PathRuntime
 						}
 					}
 
+					// Update the open/closed sets
 					openSet.Remove (currentPath.LastSegment);
 					closedSet.Add (currentPath.LastSegment);
 
 					foreach (Connection connection in currentPath.Options)
+					// Add connections leading out from this connection to the open set
 					{
 						if (!Valid (connection))
+						// Ignore invalid options
 						{
 							#if DEBUG_SEEKER
 								Debug.Log (string.Format ("Seeker: Skipping invalid connection {0} in path {1}.", connection, currentPath));
@@ -164,6 +170,7 @@ namespace PathRuntime
 						}
 
 						if (closedSet.Contains (connection))
+						// Ignore already investigated options
 						{
 							#if DEBUG_SEEKER
 								Debug.Log (string.Format ("Seeker: Skipping closed set connection {0} in path {1}.", connection, currentPath));
@@ -172,6 +179,7 @@ namespace PathRuntime
 						}
 
 						if (openSet.ContainsKey (connection))
+						// Ignore options we're already looking into
 						{
 							#if DEBUG_SEEKER
 								Debug.Log (string.Format ("Seeker: Skipping open set connection {0} in path {1}.", connection, currentPath));
@@ -179,6 +187,7 @@ namespace PathRuntime
 							continue;
 						}
 
+						// Add a new option - the current path with this connection at the end
 						openSet[connection] = new SeekerData (currentPath, connection, GScore (connection), HScore (connection));
 
 						#if DEBUG_SEEKER
