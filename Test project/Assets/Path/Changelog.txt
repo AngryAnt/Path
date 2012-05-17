@@ -9,6 +9,9 @@ Changelog:
  - Added Waypoint.Create convenience method.
  - Fixed pathfinder taking shortcut directly to target even if shortcut taking was disabled.
  - Fixed occasional exception throwing in inspector GUI.
+ - Path.ToString now returns useful info when path is empty.
+ - Upped seeker stability when fed bad data.
+ - Navigation singleton now auto-registers all waypoints when re-created.
 
 2.0.0f2:
  - Magic happened, Path 2 was born.
